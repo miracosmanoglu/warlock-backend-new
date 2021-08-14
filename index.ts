@@ -16,6 +16,6 @@ app.use("/api/horoscope", require("./routes/horoscope"));
 app.use("/api/horoscopeDescription", require("./routes/horoscopeDescription"));
 app.use("/api/warlock", require("./routes/warlock"));
 
-const server = app.listen(3001, () =>
+const server = app.listen(process.env.PORT || 3001, () =>
   console.log("🚀 Server ready at: http://localhost:3001")
 );
