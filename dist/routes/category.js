@@ -58,15 +58,19 @@ router.get("/all", function (req, res) { return __awaiter(void 0, void 0, void 0
     });
 }); });
 router.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, name, description, user, result;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+    var _a, name, description, data, result;
+    var _b, _c;
+    return __generator(this, function (_d) {
+        switch (_d.label) {
             case 0:
                 _a = req.body, name = _a.name, description = _a.description;
                 return [4 /*yield*/, authentication_1.getUserId(req)];
             case 1:
-                user = _b.sent();
-                if (user === null || user.message) {
+                data = _d.sent();
+                if (data === null ||
+                    data.message ||
+                    ((_b = data === null || data === void 0 ? void 0 : data.user) === null || _b === void 0 ? void 0 : _b.user.role) === "WARLOCK" ||
+                    ((_c = data === null || data === void 0 ? void 0 : data.user) === null || _c === void 0 ? void 0 : _c.user.role) === "CUSTOMER") {
                     res.send(JSON.stringify({
                         status: 401,
                         error: "JWT expired or not provided",
@@ -81,7 +85,7 @@ router.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, 
                         }
                     })];
             case 2:
-                result = _b.sent();
+                result = _d.sent();
                 res.json(result);
                 return [2 /*return*/];
         }

@@ -42,7 +42,6 @@ exports.__esModule = true;
 var client_1 = require("@prisma/client");
 var express_1 = __importDefault(require("express"));
 var authentication_1 = require("../utils/authentication");
-var SECRET = "asbadbbdbbh7788888887hb113h3hbb";
 var prisma = new client_1.PrismaClient();
 var router = express_1["default"].Router();
 router.get("/all", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
@@ -58,15 +57,19 @@ router.get("/all", function (req, res) { return __awaiter(void 0, void 0, void 0
     });
 }); });
 router.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, title, description, image, adminId, user, result;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+    var _a, title, description, image, adminId, data, result;
+    var _b, _c;
+    return __generator(this, function (_d) {
+        switch (_d.label) {
             case 0:
                 _a = req.body, title = _a.title, description = _a.description, image = _a.image, adminId = _a.adminId;
                 return [4 /*yield*/, authentication_1.getUserId(req)];
             case 1:
-                user = _b.sent();
-                if (user === null || user.message) {
+                data = _d.sent();
+                if (data === null ||
+                    data.message ||
+                    ((_b = data === null || data === void 0 ? void 0 : data.user) === null || _b === void 0 ? void 0 : _b.user.role) === "WARLOCK" ||
+                    ((_c = data === null || data === void 0 ? void 0 : data.user) === null || _c === void 0 ? void 0 : _c.user.role) === "CUSTOMER") {
                     res.send(JSON.stringify({
                         status: 401,
                         error: "JWT expired or not provided",
@@ -83,22 +86,26 @@ router.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, 
                         }
                     })];
             case 2:
-                result = _b.sent();
+                result = _d.sent();
                 res.json(result);
                 return [2 /*return*/];
         }
     });
 }); });
 router.put("/", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, title, description, image, id, user, blogExist, blog;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+    var _a, title, description, image, id, data, blogExist, blog;
+    var _b, _c;
+    return __generator(this, function (_d) {
+        switch (_d.label) {
             case 0:
                 _a = req.body, title = _a.title, description = _a.description, image = _a.image, id = _a.id;
                 return [4 /*yield*/, authentication_1.getUserId(req)];
             case 1:
-                user = _b.sent();
-                if (user === null || user.message) {
+                data = _d.sent();
+                if (data === null ||
+                    data.message ||
+                    ((_b = data === null || data === void 0 ? void 0 : data.user) === null || _b === void 0 ? void 0 : _b.user.role) === "WARLOCK" ||
+                    ((_c = data === null || data === void 0 ? void 0 : data.user) === null || _c === void 0 ? void 0 : _c.user.role) === "CUSTOMER") {
                     res.send(JSON.stringify({
                         status: 401,
                         error: "JWT expired or not provided",
@@ -112,7 +119,7 @@ router.put("/", function (req, res) { return __awaiter(void 0, void 0, void 0, f
                         }
                     })];
             case 2:
-                blogExist = _b.sent();
+                blogExist = _d.sent();
                 if (!blogExist) {
                     return [2 /*return*/, res.status(400).json({
                             msg: "blog does not exists"
@@ -123,25 +130,40 @@ router.put("/", function (req, res) { return __awaiter(void 0, void 0, void 0, f
                         data: { title: title, description: description, image: image }
                     })];
             case 3:
-                blog = _b.sent();
+                blog = _d.sent();
                 res.json(blog);
                 return [2 /*return*/];
         }
     });
 }); });
 router["delete"]("/", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var id, blogExist, blog;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var id, data, blogExist, blog;
+    var _a, _b;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
             case 0:
                 id = req.body.id;
+                return [4 /*yield*/, authentication_1.getUserId(req)];
+            case 1:
+                data = _c.sent();
+                if (data === null ||
+                    data.message ||
+                    ((_a = data === null || data === void 0 ? void 0 : data.user) === null || _a === void 0 ? void 0 : _a.user.role) === "WARLOCK" ||
+                    ((_b = data === null || data === void 0 ? void 0 : data.user) === null || _b === void 0 ? void 0 : _b.user.role) === "CUSTOMER") {
+                    res.send(JSON.stringify({
+                        status: 401,
+                        error: "JWT expired or not provided",
+                        response: null
+                    }));
+                    return [2 /*return*/];
+                }
                 return [4 /*yield*/, prisma.blog.findFirst({
                         where: {
                             id: id
                         }
                     })];
-            case 1:
-                blogExist = _a.sent();
+            case 2:
+                blogExist = _c.sent();
                 if (!blogExist) {
                     return [2 /*return*/, res.status(400).json({
                             msg: "blog does not exists"
@@ -152,8 +174,8 @@ router["delete"]("/", function (req, res) { return __awaiter(void 0, void 0, voi
                             id: id
                         }
                     })];
-            case 2:
-                blog = _a.sent();
+            case 3:
+                blog = _c.sent();
                 res.json(blog);
                 return [2 /*return*/];
         }

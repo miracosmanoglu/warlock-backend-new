@@ -70,15 +70,16 @@ router.get("/", function (req, res) { return __awaiter(void 0, void 0, void 0, f
     });
 }); });
 router.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, description, price, title, duration, warlockId, categoryId, user, result, e_1;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+    var _a, description, price, title, duration, warlockId, categoryId, data, result, e_1;
+    var _b;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
             case 0:
                 _a = req.body, description = _a.description, price = _a.price, title = _a.title, duration = _a.duration, warlockId = _a.warlockId, categoryId = _a.categoryId;
                 return [4 /*yield*/, authentication_1.getUserId(req)];
             case 1:
-                user = _b.sent();
-                if (user === null || user.message) {
+                data = _c.sent();
+                if (data === null || data.message || ((_b = data === null || data === void 0 ? void 0 : data.user) === null || _b === void 0 ? void 0 : _b.user.role) === "CUSTOMER") {
                     res.send(JSON.stringify({
                         status: 401,
                         error: "JWT expired or not provided",
@@ -86,9 +87,9 @@ router.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, 
                     }));
                     return [2 /*return*/];
                 }
-                _b.label = 2;
+                _c.label = 2;
             case 2:
-                _b.trys.push([2, 4, , 5]);
+                _c.trys.push([2, 4, , 5]);
                 return [4 /*yield*/, prisma.gig.create({
                         data: {
                             description: description,
@@ -100,11 +101,11 @@ router.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, 
                         }
                     })];
             case 3:
-                result = _b.sent();
+                result = _c.sent();
                 res.send(JSON.stringify({ status: 200, error: null, response: result }));
                 return [3 /*break*/, 5];
             case 4:
-                e_1 = _b.sent();
+                e_1 = _c.sent();
                 res.send(JSON.stringify({ status: 500, error: "In gig " + e_1, response: null }));
                 return [3 /*break*/, 5];
             case 5: return [2 /*return*/];

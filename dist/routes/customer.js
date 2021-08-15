@@ -73,7 +73,6 @@ router.post("/register", function (req, res) { return __awaiter(void 0, void 0, 
                     })];
             case 2:
                 emailExist = _c.sent();
-                console.log("customer: ", emailExist);
                 if (emailExist.length != 0) {
                     res.send(JSON.stringify({
                         status: 302,
@@ -86,7 +85,6 @@ router.post("/register", function (req, res) { return __awaiter(void 0, void 0, 
                     })];
             case 3:
                 usernameExist = _c.sent();
-                console.log("customer: ", usernameExist);
                 if (usernameExist.length != 0) {
                     res.send(JSON.stringify({
                         status: 302,
@@ -99,7 +97,6 @@ router.post("/register", function (req, res) { return __awaiter(void 0, void 0, 
                     })];
             case 4:
                 phoneExist = _c.sent();
-                console.log("customer: ", phoneExist);
                 if (phoneExist.length != 0) {
                     res.send(JSON.stringify({
                         status: 302,
@@ -114,7 +111,6 @@ router.post("/register", function (req, res) { return __awaiter(void 0, void 0, 
                 _c.label = 6;
             case 6:
                 _c.trys.push([6, 8, , 9]);
-                console.log("password: ", req.body.password);
                 return [4 /*yield*/, prisma.customer.create({
                         data: {
                             username: username,
@@ -174,7 +170,7 @@ router.post("/login", function login(req, res) {
                         return [2 /*return*/];
                     }
                     token = jsonwebtoken_1["default"].sign({
-                        customer: lodash_1["default"].pick(customer[0], ["id", "email"])
+                        user: lodash_1["default"].pick(customer[0], ["id", "email", "role"])
                     }, SECRET, {
                         expiresIn: "2 days"
                     });

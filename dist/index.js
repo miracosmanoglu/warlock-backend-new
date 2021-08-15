@@ -17,7 +17,7 @@ app.use("/api/gig", require("./routes/gig"));
 app.use("/api/horoscope", require("./routes/horoscope"));
 app.use("/api/horoscopeDescription", require("./routes/horoscopeDescription"));
 app.use("/api/warlock", require("./routes/warlock"));
-var server = app.listen(3001, function () {
+var server = app.listen(process.env.PORT || 3001, function () {
     return console.log("🚀 Server ready at: http://localhost:3001");
 });
 //# sourceMappingURL=index.js.map

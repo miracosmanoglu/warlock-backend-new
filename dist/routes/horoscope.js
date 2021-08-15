@@ -57,15 +57,19 @@ router.get("/all", function (req, res) { return __awaiter(void 0, void 0, void 0
     });
 }); });
 router.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, name, image, user, horoscopeExist, horoscope, e_1, e_2;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+    var _a, name, image, data, horoscopeExist, horoscope, e_1, e_2;
+    var _b, _c;
+    return __generator(this, function (_d) {
+        switch (_d.label) {
             case 0:
                 _a = req.body, name = _a.name, image = _a.image;
                 return [4 /*yield*/, authentication_1.getUserId(req)];
             case 1:
-                user = _b.sent();
-                if (user === null || user.message) {
+                data = _d.sent();
+                if (data === null ||
+                    data.message ||
+                    ((_b = data === null || data === void 0 ? void 0 : data.user) === null || _b === void 0 ? void 0 : _b.user.role) === "WARLOCK" ||
+                    ((_c = data === null || data === void 0 ? void 0 : data.user) === null || _c === void 0 ? void 0 : _c.user.role) === "CUSTOMER") {
                     res.send(JSON.stringify({
                         status: 401,
                         error: "JWT expired or not provided",
@@ -73,15 +77,14 @@ router.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, 
                     }));
                     return [2 /*return*/];
                 }
-                _b.label = 2;
+                _d.label = 2;
             case 2:
-                _b.trys.push([2, 8, , 9]);
+                _d.trys.push([2, 8, , 9]);
                 return [4 /*yield*/, prisma.horoscope.findMany({
                         where: { name: name }
                     })];
             case 3:
-                horoscopeExist = _b.sent();
-                console.log("warlock: ", horoscopeExist);
+                horoscopeExist = _d.sent();
                 if (horoscopeExist.length != 0) {
                     res.send(JSON.stringify({
                         status: 302,
@@ -89,9 +92,9 @@ router.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, 
                     }));
                     return [2 /*return*/];
                 }
-                _b.label = 4;
+                _d.label = 4;
             case 4:
-                _b.trys.push([4, 6, , 7]);
+                _d.trys.push([4, 6, , 7]);
                 return [4 /*yield*/, prisma.horoscope.create({
                         data: {
                             name: name,
@@ -99,11 +102,11 @@ router.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, 
                         }
                     })];
             case 5:
-                horoscope = _b.sent();
+                horoscope = _d.sent();
                 res.send(JSON.stringify({ status: 200, error: null, response: horoscope.id }));
                 return [3 /*break*/, 7];
             case 6:
-                e_1 = _b.sent();
+                e_1 = _d.sent();
                 res.send(JSON.stringify({
                     status: 500,
                     error: "In create horoscope " + e_1,
@@ -112,7 +115,7 @@ router.post("/", function (req, res) { return __awaiter(void 0, void 0, void 0, 
                 return [3 /*break*/, 7];
             case 7: return [3 /*break*/, 9];
             case 8:
-                e_2 = _b.sent();
+                e_2 = _d.sent();
                 res.send(JSON.stringify({
                     status: 500,
                     error: "In horoscope " + e_2,
