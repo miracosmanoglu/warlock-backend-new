@@ -20,7 +20,6 @@ router.post("/register", async (req, res) => {
     const emailExist = await prisma.customer.findMany({
       where: { email: email },
     });
-    console.log("customer: ", emailExist);
     if (emailExist.length != 0) {
       res.send(
         JSON.stringify({
@@ -33,7 +32,6 @@ router.post("/register", async (req, res) => {
     const usernameExist = await prisma.customer.findMany({
       where: { username: username },
     });
-    console.log("customer: ", usernameExist);
     if (usernameExist.length != 0) {
       res.send(
         JSON.stringify({
@@ -46,7 +44,6 @@ router.post("/register", async (req, res) => {
     const phoneExist = await prisma.customer.findMany({
       where: { phone: phone },
     });
-    console.log("customer: ", phoneExist);
     if (phoneExist.length != 0) {
       res.send(
         JSON.stringify({
@@ -58,7 +55,6 @@ router.post("/register", async (req, res) => {
     }
     req.body.password = await bcrypt.hash(req.body.password, 12);
     try {
-      console.log("password: ", req.body.password);
       const customer = await prisma.customer.create({
         data: {
           username,
@@ -115,7 +111,7 @@ router.post("/login", async function login(req, res) {
   // decode: no secret | use for client side
   const token = jwt.sign(
     {
-      customer: lodash.pick(customer[0], ["id", "email"]),
+      user: lodash.pick(customer[0], ["id", "email", "role"]),
     },
     SECRET,
     {

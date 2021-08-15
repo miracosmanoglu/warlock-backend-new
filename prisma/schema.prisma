@@ -10,6 +10,12 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum Role {
+  ADMIN
+  CUSTOMER
+  WARLOCK
+}
+
 model Customer {
   id        Int       @id @default(autoincrement())
   email     String    @unique
@@ -21,6 +27,7 @@ model Customer {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   Comment   Comment[]
+  role      Role      @default(CUSTOMER)
 }
 
 model Warlock {
@@ -39,6 +46,8 @@ model Warlock {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Gig       Gig[]
+  role      Role     @default(WARLOCK)
+
 }
 
 model Admin {
@@ -55,6 +64,8 @@ model Admin {
   updatedAt            DateTime               @updatedAt
   Blog                 Blog[]
   HoroscopeDescription HoroscopeDescription[]
+  role                 Role                   @default(ADMIN)
+
 }
 
 model Gig {

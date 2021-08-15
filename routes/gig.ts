@@ -26,8 +26,8 @@ router.post("/", async (req, res) => {
   const { description, price, title, duration, warlockId, categoryId } =
     req.body;
 
-  const user = await getUserId(req);
-  if (user === null || user.message) {
+  const data = await getUserId(req);
+  if (data === null || data.message || data?.user?.user.role === "CUSTOMER") {
     res.send(
       JSON.stringify({
         status: 401,

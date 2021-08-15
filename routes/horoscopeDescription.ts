@@ -18,8 +18,13 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   const { title, description, image, horoscopeId, adminId } = req.body;
 
-  const user = await getUserId(req);
-  if (user === null || user.message) {
+  const data = await getUserId(req);
+  if (
+    data === null ||
+    data.message ||
+    data?.user?.user.role === "WARLOCK" ||
+    data?.user?.user.role === "CUSTOMER"
+  ) {
     res.send(
       JSON.stringify({
         status: 401,

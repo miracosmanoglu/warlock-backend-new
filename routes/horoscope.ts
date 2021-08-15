@@ -12,8 +12,13 @@ router.get("/all", async (req, res) => {
 
 router.post("/", async (req, res) => {
   const { name, image } = req.body;
-  const user = await getUserId(req);
-  if (user === null || user.message) {
+  const data = await getUserId(req);
+  if (
+    data === null ||
+    data.message ||
+    data?.user?.user.role === "WARLOCK" ||
+    data?.user?.user.role === "CUSTOMER"
+  ) {
     res.send(
       JSON.stringify({
         status: 401,
@@ -28,7 +33,6 @@ router.post("/", async (req, res) => {
     const horoscopeExist = await prisma.horoscope.findMany({
       where: { name },
     });
-    console.log("warlock: ", horoscopeExist);
     if (horoscopeExist.length != 0) {
       res.send(
         JSON.stringify({

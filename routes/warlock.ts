@@ -31,7 +31,6 @@ router.post("/register", async (req, res) => {
     const emailExist = await prisma.warlock.findMany({
       where: { email: email },
     });
-    console.log("warlock: ", emailExist);
     if (emailExist.length != 0) {
       res.send(
         JSON.stringify({
@@ -44,7 +43,6 @@ router.post("/register", async (req, res) => {
     const usernameExist = await prisma.warlock.findMany({
       where: { username: username },
     });
-    console.log("warlock: ", usernameExist);
     if (usernameExist.length != 0) {
       res.send(
         JSON.stringify({
@@ -57,7 +55,6 @@ router.post("/register", async (req, res) => {
     const phoneExist = await prisma.warlock.findMany({
       where: { phone: phone },
     });
-    console.log("warlock: ", phoneExist);
     if (phoneExist.length != 0) {
       res.send(
         JSON.stringify({
@@ -69,7 +66,6 @@ router.post("/register", async (req, res) => {
     }
     req.body.password = await bcrypt.hash(req.body.password, 12);
     try {
-      console.log("password: ", req.body.password);
       const warlock = await prisma.warlock.create({
         data: {
           email,
@@ -131,7 +127,7 @@ router.post("/login", async function login(req, res) {
   // decode: no secret | use for client side
   const token = jwt.sign(
     {
-      warlock: lodash.pick(warlock[0], ["id", "email"]),
+      user: lodash.pick(warlock[0], ["id", "email", "role"]),
     },
     SECRET,
     {

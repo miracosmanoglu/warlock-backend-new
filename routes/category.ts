@@ -1,11 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import express from "express";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import lodash from "lodash";
 import { getUserId } from "../utils/authentication";
 
-const SECRET = "asbadbbdbbh7788888887hb113h3hbb";
 const prisma = new PrismaClient();
 const router = express.Router();
 
@@ -17,8 +13,13 @@ router.get("/all", async (req, res) => {
 router.post("/", async (req, res) => {
   const { name, description } = req.body;
 
-  const user = await getUserId(req);
-  if (user === null || user.message) {
+  const data = await getUserId(req);
+  if (
+    data === null ||
+    data.message ||
+    data?.user?.user.role === "WARLOCK" ||
+    data?.user?.user.role === "CUSTOMER"
+  ) {
     res.send(
       JSON.stringify({
         status: 401,
