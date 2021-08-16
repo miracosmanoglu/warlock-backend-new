@@ -7,19 +7,36 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   const { categoryId, warlockId } = req.body;
-  const filteredGigs = await prisma.gig.findMany({
-    where: {
-      OR: [
-        {
-          categoryId: categoryId,
-        },
-        {
-          warlockId: warlockId,
-        },
-      ],
-    },
-  });
-  res.json(filteredGigs);
+  try {
+    const filteredGigs = await prisma.gig.findMany({
+      where: {
+        OR: [
+          {
+            categoryId: categoryId,
+          },
+          {
+            warlockId: warlockId,
+          },
+        ],
+      },
+    });
+    res.send(
+      JSON.stringify({
+        status: 200,
+        error: null,
+        data: filteredGigs,
+      })
+    );
+  } catch (error) {
+    res.status(404);
+    res.send(
+      JSON.stringify({
+        status: 404,
+        error: error,
+        data: null,
+      })
+    );
+  }
 });
 
 router.post("/", async (req, res) => {
@@ -28,11 +45,12 @@ router.post("/", async (req, res) => {
 
   const data = await getUserId(req);
   if (data === null || data.message || data?.user?.user.role === "CUSTOMER") {
+    res.status(401);
     res.send(
       JSON.stringify({
         status: 401,
         error: "JWT expired or not provided",
-        response: null,
+        data: null,
       })
     );
     return;
@@ -49,11 +67,10 @@ router.post("/", async (req, res) => {
       },
     });
 
-    res.send(JSON.stringify({ status: 200, error: null, response: result }));
+    res.send(JSON.stringify({ status: 200, error: null, data: result }));
   } catch (e) {
-    res.send(
-      JSON.stringify({ status: 500, error: "In gig " + e, response: null })
-    );
+    res.status(500);
+    res.send(JSON.stringify({ status: 500, error: e, data: null }));
   }
 });
 module.exports = router;

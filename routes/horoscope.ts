@@ -6,8 +6,13 @@ const prisma = new PrismaClient();
 const router = express.Router();
 
 router.get("/all", async (req, res) => {
-  const horoscopes = await prisma.horoscope.findMany({});
-  res.json(horoscopes);
+  try {
+    const horoscopes = await prisma.horoscope.findMany({});
+    res.send(JSON.stringify({ status: 200, error: null, data: horoscopes }));
+  } catch (e) {
+    res.status(500);
+    res.send(JSON.stringify({ status: 500, error: e, data: null }));
+  }
 });
 
 router.post("/", async (req, res) => {
@@ -19,11 +24,12 @@ router.post("/", async (req, res) => {
     data?.user?.user.role === "WARLOCK" ||
     data?.user?.user.role === "CUSTOMER"
   ) {
+    res.status(401);
     res.send(
       JSON.stringify({
         status: 401,
         error: "JWT expired or not provided",
-        response: null,
+        data: null,
       })
     );
     return;
@@ -34,6 +40,7 @@ router.post("/", async (req, res) => {
       where: { name },
     });
     if (horoscopeExist.length != 0) {
+      res.status(302);
       res.send(
         JSON.stringify({
           status: 302,
@@ -50,23 +57,25 @@ router.post("/", async (req, res) => {
         },
       });
       res.send(
-        JSON.stringify({ status: 200, error: null, response: horoscope.id })
+        JSON.stringify({ status: 200, error: null, data: horoscope.id })
       );
     } catch (e) {
+      res.status(500);
       res.send(
         JSON.stringify({
           status: 500,
-          error: "In create horoscope " + e,
-          response: null,
+          error: e,
+          data: null,
         })
       );
     }
   } catch (e) {
+    res.status(500);
     res.send(
       JSON.stringify({
         status: 500,
-        error: "In horoscope " + e,
-        response: null,
+        error: e,
+        data: null,
       })
     );
   }

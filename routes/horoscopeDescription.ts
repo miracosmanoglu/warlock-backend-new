@@ -7,12 +7,19 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   const { horoscopeId } = req.body;
-  const horoscopeDescription = await prisma.horoscopeDescription.findMany({
-    where: {
-      horoscopeId: horoscopeId,
-    },
-  });
-  res.json(horoscopeDescription);
+  try {
+    const horoscopeDescription = await prisma.horoscopeDescription.findMany({
+      where: {
+        horoscopeId: horoscopeId,
+      },
+    });
+    res.send(
+      JSON.stringify({ status: 200, error: null, data: horoscopeDescription })
+    );
+  } catch (error) {
+    res.status(500);
+    res.send(JSON.stringify({ status: 500, error: error, data: null }));
+  }
 });
 
 router.post("/", async (req, res) => {
@@ -25,27 +32,33 @@ router.post("/", async (req, res) => {
     data?.user?.user.role === "WARLOCK" ||
     data?.user?.user.role === "CUSTOMER"
   ) {
+    res.status(401);
     res.send(
       JSON.stringify({
         status: 401,
         error: "JWT expired or not provided",
-        response: null,
+        data: null,
       })
     );
     return;
   }
 
-  const result = await prisma.horoscopeDescription.create({
-    data: {
-      title,
-      description,
-      image,
-      horoscopeId,
-      adminId,
-    },
-  });
+  try {
+    const result = await prisma.horoscopeDescription.create({
+      data: {
+        title,
+        description,
+        image,
+        horoscopeId,
+        adminId,
+      },
+    });
 
-  res.json(result);
+    res.send(JSON.stringify({ status: 200, error: null, data: result.id }));
+  } catch (error) {
+    res.status(500);
+    res.send(JSON.stringify({ status: 500, error: error, data: null }));
+  }
 });
 
 router.put("/", async (req, res) => {
@@ -53,21 +66,33 @@ router.put("/", async (req, res) => {
 
   const user = await getUserId(req);
   if (user === null || user.message) {
+    res.status(401);
     res.send(
       JSON.stringify({
         status: 401,
         error: "JWT expired or not provided",
-        response: null,
+        data: null,
       })
     );
     return;
   }
 
-  const horoscopeDescription = await prisma.horoscopeDescription.update({
-    where: { id: id },
-    data: { title, description, image },
-  });
-  res.json(horoscopeDescription);
+  try {
+    const horoscopeDescription = await prisma.horoscopeDescription.update({
+      where: { id: id },
+      data: { title, description, image },
+    });
+    res.send(
+      JSON.stringify({
+        status: 200,
+        error: null,
+        data: horoscopeDescription.id,
+      })
+    );
+  } catch (error) {
+    res.status(500);
+    res.send(JSON.stringify({ status: 500, error: error, data: null }));
+  }
 });
 
 router.delete(`/`, async (req, res) => {
@@ -75,22 +100,34 @@ router.delete(`/`, async (req, res) => {
 
   const user = await getUserId(req);
   if (user === null || user.message) {
+    res.status(401);
     res.send(
       JSON.stringify({
         status: 401,
         error: "JWT expired or not provided",
-        response: null,
+        data: null,
       })
     );
     return;
   }
 
-  const horoscopeDescription = await prisma.horoscopeDescription.delete({
-    where: {
-      id: id,
-    },
-  });
-  res.json(horoscopeDescription);
+  try {
+    const horoscopeDescription = await prisma.horoscopeDescription.delete({
+      where: {
+        id: id,
+      },
+    });
+    res.send(
+      JSON.stringify({
+        status: 200,
+        error: null,
+        data: horoscopeDescription.id,
+      })
+    );
+  } catch (error) {
+    res.status(500);
+    res.send(JSON.stringify({ status: 500, error: error, data: null }));
+  }
 });
 
 module.exports = router;

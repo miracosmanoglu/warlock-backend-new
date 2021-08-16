@@ -3,14 +3,52 @@ import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import lodash from "lodash";
+import { getUserId } from "../utils/authentication";
 
 const SECRET = "asbadbbdbbh7788888887hb113h3hbb";
 const prisma = new PrismaClient();
 const router = express.Router();
 
 router.get("/all", async (req, res) => {
-  const warlocks = await prisma.warlock.findMany({});
-  res.json(warlocks);
+  try {
+    const warlocks = await prisma.warlock.findMany({
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        name: true,
+        surname: true,
+        phone: true,
+        role: true,
+        about: true,
+        rating: true,
+        tags: true,
+        comments: true,
+        status: true,
+      },
+    });
+    res.send(JSON.stringify({ status: 200, error: null, data: warlocks }));
+  } catch (e) {
+    res.status(500);
+    res.send(JSON.stringify({ status: 500, error: e, data: null }));
+  }
+});
+
+router.get("/", async (req, res) => {
+  const { id } = req.body;
+  const data = await getUserId(req);
+
+  try {
+    const warlock = await prisma.warlock.findUnique({
+      where: { id: id || data?.user?.user.id },
+    });
+    res.send(JSON.stringify({ status: 200, error: null, data: warlock }));
+  } catch (error) {
+    res.status(404);
+    res.send(
+      JSON.stringify({ status: 404, error: "Warlock not found", data: null })
+    );
+  }
 });
 
 router.post("/register", async (req, res) => {
@@ -32,10 +70,12 @@ router.post("/register", async (req, res) => {
       where: { email: email },
     });
     if (emailExist.length != 0) {
+      res.status(302);
       res.send(
         JSON.stringify({
           status: 302,
           error: "warlock is found with that email",
+          data: null,
         })
       );
       return;
@@ -44,10 +84,12 @@ router.post("/register", async (req, res) => {
       where: { username: username },
     });
     if (usernameExist.length != 0) {
+      res.status(302);
       res.send(
         JSON.stringify({
           status: 302,
           error: "warlock is found with that username",
+          data: null,
         })
       );
       return;
@@ -56,10 +98,12 @@ router.post("/register", async (req, res) => {
       where: { phone: phone },
     });
     if (phoneExist.length != 0) {
+      res.status(302);
       res.send(
         JSON.stringify({
           status: 302,
           error: "warlock is found with that phone",
+          data: null,
         })
       );
       return;
@@ -81,60 +125,75 @@ router.post("/register", async (req, res) => {
           status,
         },
       });
-      res.send(
-        JSON.stringify({ status: 200, error: null, response: warlock.id })
-      );
+      res.send(JSON.stringify({ status: 200, error: null, data: warlock.id }));
     } catch (e) {
+      res.status(500);
       res.send(
         JSON.stringify({
           status: 500,
-          error: "In create warlock " + e,
-          response: null,
+          error: e,
+          data: null,
         })
       );
     }
   } catch (e) {
-    res.send(
-      JSON.stringify({ status: 500, error: "In warlock " + e, response: null })
-    );
+    res.status(500);
+    res.send(JSON.stringify({ status: 500, error: e, data: null }));
   }
 });
 
 router.post("/login", async function login(req, res) {
   const { email } = req.body;
 
-  const warlock = await prisma.warlock.findMany({
-    where: { email },
-  });
-  if (warlock.length === 0) {
+  try {
+    const warlock = await prisma.warlock.findMany({
+      where: { email },
+    });
+    if (warlock.length === 0) {
+      res.status(404);
+      res.send(
+        JSON.stringify({
+          status: 404,
+          error: "Not warlock with that email",
+          token: null,
+        })
+      );
+      return;
+    }
+    const valid = await bcrypt.compare(req.body.password, warlock[0].password);
+    if (!valid) {
+      res.status(404);
+      res.send(
+        JSON.stringify({
+          status: 404,
+          error: "Incorrect password",
+          token: null,
+        })
+      );
+      return;
+    }
+    // verify: needs SECRET | use for authentication
+    // decode: no secret | use for client side
+    const token = jwt.sign(
+      {
+        user: lodash.pick(warlock[0], ["id", "email", "role"]),
+      },
+      SECRET,
+      {
+        expiresIn: "2 days",
+      }
+    );
+    res.send(JSON.stringify({ status: 200, error: null, token: token }));
+  } catch (error) {
+    res.status(500);
     res.send(
       JSON.stringify({
-        status: 404,
-        error: "Not warlock with that email",
+        status: 500,
+        error: error,
         token: null,
       })
     );
-    return;
   }
-  const valid = await bcrypt.compare(req.body.password, warlock[0].password);
-  if (!valid) {
-    res.send(
-      JSON.stringify({ status: 404, error: "Incorrect password", token: null })
-    );
-    return;
-  }
-  // verify: needs SECRET | use for authentication
-  // decode: no secret | use for client side
-  const token = jwt.sign(
-    {
-      user: lodash.pick(warlock[0], ["id", "email", "role"]),
-    },
-    SECRET,
-    {
-      expiresIn: "2 days",
-    }
-  );
-  res.send(JSON.stringify({ status: 200, error: null, token: token }));
 });
 
 module.exports = router;

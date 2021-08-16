@@ -3,6 +3,7 @@ import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import lodash from "lodash";
+import { getUserId } from "../utils/authentication";
 
 const SECRET = "asbadbbdbbh7788888887hb113h3hbb";
 const prisma = new PrismaClient();
@@ -10,12 +11,19 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   const { id } = req.body;
-  const filteredAdmin = await prisma.admin.findUnique({
-    where: {
-      id: id,
-    },
-  });
-  res.json(filteredAdmin);
+  const data = await getUserId(req);
+
+  try {
+    const admin = await prisma.admin.findUnique({
+      where: { id: id || data?.user?.user.id },
+    });
+    res.send(JSON.stringify({ status: 200, error: null, data: admin }));
+  } catch (error) {
+    res.status(404);
+    res.send(
+      JSON.stringify({ status: 404, error: "Admin not found", data: null })
+    );
+  }
 });
 
 router.post("/register", async (req, res) => {
@@ -27,10 +35,12 @@ router.post("/register", async (req, res) => {
       where: { email: email },
     });
     if (emailExist.length != 0) {
+      res.status(302);
       res.send(
         JSON.stringify({
           status: 302,
           error: "admin is found with that email",
+          data: null,
         })
       );
       return;
@@ -39,10 +49,12 @@ router.post("/register", async (req, res) => {
       where: { username: username },
     });
     if (usernameExist.length != 0) {
+      res.status(302);
       res.send(
         JSON.stringify({
           status: 302,
           error: "admin is found with that username",
+          data: null,
         })
       );
       return;
@@ -51,10 +63,12 @@ router.post("/register", async (req, res) => {
       where: { phone: phone },
     });
     if (phoneExist.length != 0) {
+      res.status(302);
       res.send(
         JSON.stringify({
           status: 302,
           error: "admin is found with that phone",
+          data: null,
         })
       );
       return;
@@ -73,22 +87,20 @@ router.post("/register", async (req, res) => {
           image,
         },
       });
-      res.send(
-        JSON.stringify({ status: 200, error: null, response: admin.id })
-      );
+      res.send(JSON.stringify({ status: 200, error: null, data: admin.id }));
     } catch (e) {
+      res.status(500);
       res.send(
         JSON.stringify({
           status: 500,
-          error: "In create admin " + e,
-          response: null,
+          error: e,
+          data: null,
         })
       );
     }
   } catch (e) {
-    res.send(
-      JSON.stringify({ status: 500, error: "In admin " + e, response: null })
-    );
+    res.status(500);
+    res.send(JSON.stringify({ status: 500, error: e, data: null }));
   }
 });
 
@@ -99,6 +111,7 @@ router.post("/login", async function login(req, res) {
     where: { email },
   });
   if (admin.length === 0) {
+    res.status(404);
     res.send(
       JSON.stringify({
         status: 404,
@@ -110,6 +123,7 @@ router.post("/login", async function login(req, res) {
   }
   const valid = await bcrypt.compare(req.body.password, admin[0].password);
   if (!valid) {
+    res.status(404);
     res.send(
       JSON.stringify({ status: 404, error: "Incorrect password", token: null })
     );
@@ -128,4 +142,5 @@ router.post("/login", async function login(req, res) {
   );
   res.send(JSON.stringify({ status: 200, error: null, token: token }));
 });
+
 module.exports = router;

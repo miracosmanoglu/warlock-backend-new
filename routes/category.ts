@@ -6,8 +6,28 @@ const prisma = new PrismaClient();
 const router = express.Router();
 
 router.get("/all", async (req, res) => {
-  const categories = await prisma.category.findMany({});
-  res.json(categories);
+  try {
+    const categories = await prisma.category.findMany({});
+    res.send(JSON.stringify({ status: 200, error: null, data: categories }));
+  } catch (e) {
+    res.status(500);
+    res.send(JSON.stringify({ status: 500, error: e, data: null }));
+  }
+});
+
+router.get("/", async (req, res) => {
+  const { id } = req.body;
+  try {
+    const category = await prisma.category.findUnique({
+      where: { id: id },
+    });
+    res.send(JSON.stringify({ status: 200, error: null, data: category }));
+  } catch (error) {
+    res.status(404);
+    res.send(
+      JSON.stringify({ status: 404, error: "Category not found", data: null })
+    );
+  }
 });
 
 router.post("/", async (req, res) => {
@@ -20,23 +40,31 @@ router.post("/", async (req, res) => {
     data?.user?.user.role === "WARLOCK" ||
     data?.user?.user.role === "CUSTOMER"
   ) {
+    res.status(401);
     res.send(
       JSON.stringify({
         status: 401,
         error: "JWT expired or not provided",
-        response: null,
+        data: null,
       })
     );
     return;
   }
 
-  const result = await prisma.category.create({
-    data: {
-      name,
-      description,
-    },
-  });
+  try {
+    const result = await prisma.category.create({
+      data: {
+        name,
+        description,
+      },
+    });
 
-  res.json(result);
+    res.send(JSON.stringify({ status: 200, error: null, data: result.id }));
+  } catch (error) {
+    res.status(404);
+    res.send(
+      JSON.stringify({ status: 404, error: "Category not found", data: null })
+    );
+  }
 });
 module.exports = router;
