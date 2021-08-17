@@ -17,12 +17,25 @@ router.get("/", async (req, res) => {
     const admin = await prisma.admin.findUnique({
       where: { id: id || data?.user?.user.id },
     });
+
+    if (!admin) {
+      res.status(404);
+      res.send(
+        JSON.stringify({
+          status: 404,
+          error: "admin not found",
+          data: null,
+        })
+      );
+      return;
+    }
+
     res.send(JSON.stringify({ status: 200, error: null, data: admin }));
+    return;
   } catch (error) {
     res.status(404);
-    res.send(
-      JSON.stringify({ status: 404, error: "Admin not found", data: null })
-    );
+    res.send(JSON.stringify({ status: 404, error: error, data: null }));
+    return;
   }
 });
 
@@ -141,6 +154,70 @@ router.post("/login", async function login(req, res) {
     }
   );
   res.send(JSON.stringify({ status: 200, error: null, token: token }));
+});
+
+router.put("/reset-password", async (req, res) => {
+  const data = await getUserId(req);
+
+  if (
+    data === null ||
+    data.message ||
+    data?.user?.user.role === "CUSTOMER" ||
+    data?.user?.user.role === "WARLOCK"
+  ) {
+    res.status(401);
+    res.send(
+      JSON.stringify({
+        status: 401,
+        error: "JWT expired or not provided",
+        data: null,
+      })
+    );
+    return;
+  }
+  try {
+    const adminExist = await prisma.admin.findFirst({
+      where: {
+        id: data.user?.user.id,
+      },
+    });
+
+    if (!adminExist) {
+      res.status(400);
+      res.send(
+        JSON.stringify({
+          status: 400,
+          error: "admin does not exist",
+          data: null,
+        })
+      );
+      return;
+    }
+
+    if (req.body.password !== req.body.rePassword) {
+      res.status(500);
+      res.send(
+        JSON.stringify({
+          status: 500,
+          error: "Password does not match.",
+          data: null,
+        })
+      );
+      return;
+    }
+    req.body.password = await bcrypt.hash(req.body.password, 12);
+
+    const admin = await prisma.admin.update({
+      where: { id: data.user?.user.id },
+      data: { password: req.body.password },
+    });
+    res.send(JSON.stringify({ status: 200, error: null, data: admin.id }));
+    return;
+  } catch (error) {
+    res.status(404);
+    res.send(JSON.stringify({ status: 404, error: error, data: null }));
+    return;
+  }
 });
 
 module.exports = router;

@@ -37,12 +37,25 @@ router.get("/", async (req, res) => {
     const customer = await prisma.customer.findUnique({
       where: { id: id || data?.user?.user.id },
     });
+
+    if (!customer) {
+      res.status(404);
+      res.send(
+        JSON.stringify({
+          status: 404,
+          error: "customer not found",
+          data: null,
+        })
+      );
+      return;
+    }
+
     res.send(JSON.stringify({ status: 200, error: null, data: customer }));
+    return;
   } catch (error) {
     res.status(404);
-    res.send(
-      JSON.stringify({ status: 404, error: "Customer not found", data: null })
-    );
+    res.send(JSON.stringify({ status: 404, error: error, data: null }));
+    return;
   }
 });
 
@@ -162,10 +175,80 @@ router.post("/login", async function login(req, res) {
         expiresIn: "2 days",
       }
     );
-    res.send(JSON.stringify({ status: 200, error: null, token: token }));
+    res.send(
+      JSON.stringify({
+        status: 200,
+        error: null,
+        token: token,
+      })
+    );
   } catch (error) {
     res.status(500);
     res.send(JSON.stringify({ status: 500, error: error, token: null }));
+  }
+});
+
+router.put("/reset-password", async (req, res) => {
+  const data = await getUserId(req);
+
+  if (
+    data === null ||
+    data.message ||
+    data?.user?.user.role === "ADMIN" ||
+    data?.user?.user.role === "WARLOCK"
+  ) {
+    res.status(401);
+    res.send(
+      JSON.stringify({
+        status: 401,
+        error: "JWT expired or not provided",
+        data: null,
+      })
+    );
+    return;
+  }
+  try {
+    const customerExist = await prisma.customer.findFirst({
+      where: {
+        id: data.user?.user.id,
+      },
+    });
+
+    if (!customerExist) {
+      res.status(400);
+      res.send(
+        JSON.stringify({
+          status: 400,
+          error: "customer does not exist",
+          data: null,
+        })
+      );
+      return;
+    }
+
+    if (req.body.password !== req.body.rePassword) {
+      res.status(500);
+      res.send(
+        JSON.stringify({
+          status: 500,
+          error: "Password does not match.",
+          data: null,
+        })
+      );
+      return;
+    }
+    req.body.password = await bcrypt.hash(req.body.password, 12);
+
+    const customer = await prisma.customer.update({
+      where: { id: data.user?.user.id },
+      data: { password: req.body.password },
+    });
+    res.send(JSON.stringify({ status: 200, error: null, data: customer.id }));
+    return;
+  } catch (error) {
+    res.status(404);
+    res.send(JSON.stringify({ status: 404, error: error, data: null }));
+    return;
   }
 });
 

@@ -28,9 +28,11 @@ router.get("/all", async (req, res) => {
       },
     });
     res.send(JSON.stringify({ status: 200, error: null, data: warlocks }));
+    return;
   } catch (e) {
     res.status(500);
     res.send(JSON.stringify({ status: 500, error: e, data: null }));
+    return;
   }
 });
 
@@ -42,12 +44,25 @@ router.get("/", async (req, res) => {
     const warlock = await prisma.warlock.findUnique({
       where: { id: id || data?.user?.user.id },
     });
+
+    if (!warlock) {
+      res.status(404);
+      res.send(
+        JSON.stringify({
+          status: 404,
+          error: "warlock not found",
+          data: null,
+        })
+      );
+      return;
+    }
+
     res.send(JSON.stringify({ status: 200, error: null, data: warlock }));
+    return;
   } catch (error) {
     res.status(404);
-    res.send(
-      JSON.stringify({ status: 404, error: "Warlock not found", data: null })
-    );
+    res.send(JSON.stringify({ status: 404, error: error, data: null }));
+    return;
   }
 });
 
@@ -126,6 +141,7 @@ router.post("/register", async (req, res) => {
         },
       });
       res.send(JSON.stringify({ status: 200, error: null, data: warlock.id }));
+      return;
     } catch (e) {
       res.status(500);
       res.send(
@@ -135,10 +151,12 @@ router.post("/register", async (req, res) => {
           data: null,
         })
       );
+      return;
     }
   } catch (e) {
     res.status(500);
     res.send(JSON.stringify({ status: 500, error: e, data: null }));
+    return;
   }
 });
 
@@ -184,6 +202,7 @@ router.post("/login", async function login(req, res) {
       }
     );
     res.send(JSON.stringify({ status: 200, error: null, token: token }));
+    return;
   } catch (error) {
     res.status(500);
     res.send(
@@ -193,6 +212,135 @@ router.post("/login", async function login(req, res) {
         token: null,
       })
     );
+    return;
+  }
+});
+
+router.put("/reset-password", async (req, res) => {
+  const data = await getUserId(req);
+
+  if (
+    data === null ||
+    data.message ||
+    data?.user?.user.role === "ADMIN" ||
+    data?.user?.user.role === "CUSTOMER"
+  ) {
+    res.status(401);
+    res.send(
+      JSON.stringify({
+        status: 401,
+        error: "JWT expired or not provided",
+        data: null,
+      })
+    );
+    return;
+  }
+  try {
+    const warlockExist = await prisma.warlock.findFirst({
+      where: {
+        id: data.user?.user.id,
+      },
+    });
+
+    if (!warlockExist) {
+      res.status(400);
+      res.send(
+        JSON.stringify({
+          status: 400,
+          error: "warlock does not exist",
+          data: null,
+        })
+      );
+      return;
+    }
+
+    if (req.body.password !== req.body.rePassword) {
+      res.status(500);
+      res.send(
+        JSON.stringify({
+          status: 500,
+          error: "Password does not match.",
+          data: null,
+        })
+      );
+      return;
+    }
+    req.body.password = await bcrypt.hash(req.body.password, 12);
+
+    const warlock = await prisma.warlock.update({
+      where: { id: data.user?.user.id },
+      data: { password: req.body.password },
+    });
+    res.send(JSON.stringify({ status: 200, error: null, data: warlock.id }));
+    return;
+  } catch (error) {
+    res.status(404);
+    res.send(JSON.stringify({ status: 404, error: error, data: null }));
+    return;
+  }
+});
+
+router.put("/tag", async (req, res) => {
+  const data = await getUserId(req);
+
+  if (
+    data === null ||
+    data.message ||
+    data?.user?.user.role === "ADMIN" ||
+    data?.user?.user.role === "CUSTOMER"
+  ) {
+    res.status(401);
+    res.send(
+      JSON.stringify({
+        status: 401,
+        error: "JWT expired or not provided",
+        data: null,
+      })
+    );
+    return;
+  }
+  try {
+    const warlockExist = await prisma.warlock.findFirst({
+      where: {
+        id: data.user?.user.id,
+      },
+    });
+
+    if (!warlockExist) {
+      res.status(400);
+      res.send(
+        JSON.stringify({
+          status: 400,
+          error: "warlock does not exist",
+          data: null,
+        })
+      );
+      return;
+    }
+
+    if (req.body.password !== req.body.rePassword) {
+      res.status(500);
+      res.send(
+        JSON.stringify({
+          status: 500,
+          error: "Password does not match.",
+          data: null,
+        })
+      );
+      return;
+    }
+    req.body.password = await bcrypt.hash(req.body.password, 12);
+
+    const warlock = await prisma.warlock.update({
+      where: { id: data.user?.user.id },
+      data: { password: req.body.password },
+    });
+    res.send(JSON.stringify({ status: 200, error: null, data: warlock.id }));
+    return;
+  } catch (error) {
+    res.status(404);
+    res.send(JSON.stringify({ status: 404, error: error, data: null }));
+    return;
   }
 });
 

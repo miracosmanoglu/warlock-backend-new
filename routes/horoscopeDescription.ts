@@ -64,8 +64,13 @@ router.post("/", async (req, res) => {
 router.put("/", async (req, res) => {
   const { title, description, image, id } = req.body;
 
-  const user = await getUserId(req);
-  if (user === null || user.message) {
+  const data = await getUserId(req);
+  if (
+    data === null ||
+    data.message ||
+    data?.user?.user.role === "CUSTOMER" ||
+    data?.user?.user.role === "WARLOCK"
+  ) {
     res.status(401);
     res.send(
       JSON.stringify({
@@ -98,8 +103,13 @@ router.put("/", async (req, res) => {
 router.delete(`/`, async (req, res) => {
   const { id } = req.body;
 
-  const user = await getUserId(req);
-  if (user === null || user.message) {
+  const data = await getUserId(req);
+  if (
+    data === null ||
+    data.message ||
+    data?.user?.user.role === "CUSTOMER" ||
+    data?.user?.user.role === "WARLOCK"
+  ) {
     res.status(401);
     res.send(
       JSON.stringify({

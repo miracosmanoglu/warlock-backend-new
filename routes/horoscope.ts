@@ -80,4 +80,103 @@ router.post("/", async (req, res) => {
     );
   }
 });
+
+router.put("/", async (req, res) => {
+  const { name, image, id } = req.body;
+
+  const data = await getUserId(req);
+
+  if (
+    data === null ||
+    data.message ||
+    data?.user?.user.role === "WARLOCK" ||
+    data?.user?.user.role === "CUSTOMER"
+  ) {
+    res.status(401);
+    res.send(
+      JSON.stringify({
+        status: 401,
+        error: "JWT expired or not provided",
+        data: null,
+      })
+    );
+    return;
+  }
+  try {
+    const horoscopeExist = await prisma.horoscope.findFirst({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!horoscopeExist) {
+      res.status(400);
+      res.send(
+        JSON.stringify({
+          status: 400,
+          error: "horoscope does not exist",
+          data: null,
+        })
+      );
+    }
+    const horoscope = await prisma.horoscope.update({
+      where: { id: id },
+      data: { name, image },
+    });
+    res.send(JSON.stringify({ status: 200, error: null, data: horoscope.id }));
+  } catch (error) {
+    res.status(404);
+    res.send(JSON.stringify({ status: 404, error: error, data: null }));
+  }
+});
+
+router.delete(`/`, async (req, res) => {
+  const { id } = req.body;
+
+  const data = await getUserId(req);
+
+  if (
+    data === null ||
+    data.message ||
+    data?.user?.user.role === "CUSTOMER" ||
+    data?.user?.user.role === "WARLOCK"
+  ) {
+    res.status(401);
+    res.send(
+      JSON.stringify({
+        status: 401,
+        error: "JWT expired or not provided",
+        data: null,
+      })
+    );
+    return;
+  }
+  try {
+    const horoscopeExist = await prisma.horoscope.findFirst({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!horoscopeExist) {
+      res.status(400);
+      res.send(
+        JSON.stringify({
+          status: 400,
+          error: "horoscope does not exist",
+          data: null,
+        })
+      );
+    }
+    const horoscope = await prisma.horoscope.delete({
+      where: {
+        id: id,
+      },
+    });
+    res.send(JSON.stringify({ status: 200, error: null, data: horoscope.id }));
+  } catch (error) {
+    res.status(404);
+    res.send(JSON.stringify({ status: 404, error: error, data: null }));
+  }
+});
 module.exports = router;

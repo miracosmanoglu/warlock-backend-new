@@ -55,4 +55,93 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.put("/", async (req, res) => {
+  const { text, rate, id } = req.body;
+
+  const data = await getUserId(req);
+
+  if (data === null || data.message || data?.user?.user.role === "WARLOCK") {
+    res.status(401);
+    res.send(
+      JSON.stringify({
+        status: 401,
+        error: "JWT expired or not provided",
+        data: null,
+      })
+    );
+    return;
+  }
+  try {
+    const commentExist = await prisma.comment.findFirst({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!commentExist) {
+      res.status(400);
+      res.send(
+        JSON.stringify({
+          status: 400,
+          error: "comment does not exist",
+          data: null,
+        })
+      );
+    }
+    const comment = await prisma.comment.update({
+      where: { id: id },
+      data: { text, rate },
+    });
+    res.send(JSON.stringify({ status: 200, error: null, data: comment.id }));
+  } catch (error) {
+    res.status(404);
+    res.send(JSON.stringify({ status: 404, error: error, data: null }));
+  }
+});
+
+router.delete(`/`, async (req, res) => {
+  const { id } = req.body;
+
+  const data = await getUserId(req);
+
+  if (data === null || data.message || data?.user?.user.role === "WARLOCK") {
+    res.status(401);
+    res.send(
+      JSON.stringify({
+        status: 401,
+        error: "JWT expired or not provided",
+        data: null,
+      })
+    );
+    return;
+  }
+  try {
+    const commentExist = await prisma.comment.findFirst({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!commentExist) {
+      res.status(400);
+      res.send(
+        JSON.stringify({
+          status: 400,
+          error: "comment does not exist",
+          data: null,
+        })
+      );
+    }
+    const comment = await prisma.comment.delete({
+      where: {
+        id: id,
+      },
+    });
+    res.send(JSON.stringify({ status: 200, error: null, data: comment.id }));
+  } catch (error) {
+    res.status(404);
+    res.send(JSON.stringify({ status: 404, error: error, data: null }));
+  }
+});
+
 module.exports = router;
