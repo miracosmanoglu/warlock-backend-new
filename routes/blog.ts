@@ -15,11 +15,11 @@ router.get("/all", async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
-  const { id } = req.body;
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
   try {
     const blog = await prisma.blog.findUnique({
-      where: { id: id },
+      where: { id: parseInt(id) },
     });
     res.send(JSON.stringify({ status: 200, error: null, data: blog }));
   } catch (error) {

@@ -29,13 +29,13 @@ router.get("/all", async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
-  const { id } = req.body;
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
   const data = await getUserId(req);
 
   try {
     const customer = await prisma.customer.findUnique({
-      where: { id: id || data?.user?.user.id },
+      where: { id: parseInt(id) || data?.user?.user.id },
     });
 
     if (!customer) {

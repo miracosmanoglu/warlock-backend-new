@@ -9,13 +9,13 @@ const SECRET = "asbadbbdbbh7788888887hb113h3hbb";
 const prisma = new PrismaClient();
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  const { id } = req.body;
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
   const data = await getUserId(req);
 
   try {
     const admin = await prisma.admin.findUnique({
-      where: { id: id || data?.user?.user.id },
+      where: { id: parseInt(id) || data?.user?.user.id },
     });
 
     if (!admin) {

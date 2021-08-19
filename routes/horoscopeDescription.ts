@@ -5,12 +5,12 @@ import { getUserId } from "../utils/authentication";
 const prisma = new PrismaClient();
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  const { horoscopeId } = req.body;
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
   try {
     const horoscopeDescription = await prisma.horoscopeDescription.findMany({
       where: {
-        horoscopeId: horoscopeId,
+        horoscopeId: parseInt(id),
       },
     });
     res.send(
