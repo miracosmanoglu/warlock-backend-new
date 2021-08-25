@@ -5,17 +5,18 @@ import { getUserId } from "../utils/authentication";
 const prisma = new PrismaClient();
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  const { categoryId, warlockId } = req.body;
+router.get("/:warlockid/:categoryid", async (req, res) => {
+  const { warlockid, categoryid } = req.params;
+
   try {
     const filteredGigs = await prisma.gig.findMany({
       where: {
-        OR: [
+        AND: [
           {
-            categoryId: categoryId,
+            categoryId: categoryid === "all" ? undefined : parseInt(categoryid),
           },
           {
-            warlockId: warlockId,
+            warlockId: warlockid === "all" ? undefined : parseInt(warlockid),
           },
         ],
       },
@@ -111,7 +112,21 @@ router.put("/", async (req, res) => {
           data: null,
         })
       );
+      return;
     }
+
+    if (gigExist?.warlockId !== data.user?.user.id) {
+      res.status(401);
+      res.send(
+        JSON.stringify({
+          status: 401,
+          error: "Warlock does not own this gig.",
+          data: null,
+        })
+      );
+      return;
+    }
+
     const gig = await prisma.gig.update({
       where: { id: id },
       data: { description, price, title, duration },

@@ -16,6 +16,9 @@ router.get("/:id", async (req, res) => {
   try {
     const admin = await prisma.admin.findUnique({
       where: { id: parseInt(id) || data?.user?.user.id },
+      include: {
+        Blog: true,
+      },
     });
 
     if (!admin) {
