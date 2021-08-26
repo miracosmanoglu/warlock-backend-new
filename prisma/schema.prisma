@@ -42,7 +42,7 @@ model Warlock {
   rating    Int?
   tags      String?
   comments  String?
-  status    Boolean?
+  status    String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Gig       Gig[]
