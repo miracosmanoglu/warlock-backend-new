@@ -90,6 +90,19 @@ router.put("/", async (req, res) => {
         })
       );
     }
+
+    if (commentExist?.customerId !== data.user?.user.id) {
+      res.status(401);
+      res.send(
+        JSON.stringify({
+          status: 401,
+          error: "Customer does not own this comment.",
+          data: null,
+        })
+      );
+      return;
+    }
+
     const comment = await prisma.comment.update({
       where: { id: id },
       data: { text, rate },
@@ -133,6 +146,18 @@ router.delete(`/`, async (req, res) => {
           data: null,
         })
       );
+    }
+
+    if (commentExist?.customerId !== data.user?.user.id) {
+      res.status(401);
+      res.send(
+        JSON.stringify({
+          status: 401,
+          error: "Customer does not own this comment.",
+          data: null,
+        })
+      );
+      return;
     }
     const comment = await prisma.comment.delete({
       where: {
