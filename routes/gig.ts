@@ -41,8 +41,7 @@ router.get("/:warlockid/:categoryid", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { description, price, title, duration, warlockId, categoryId } =
-    req.body;
+  const { description, price, title, duration, categoryId } = req.body;
 
   const data = await getUserId(req);
   if (data === null || data.message || data?.user?.user.role === "CUSTOMER") {
@@ -57,18 +56,20 @@ router.post("/", async (req, res) => {
     return;
   }
   try {
-    const result = await prisma.gig.create({
-      data: {
-        description,
-        price,
-        title,
-        duration,
-        warlockId,
-        categoryId,
-      },
-    });
+    if (data.user) {
+      const result = await prisma.gig.create({
+        data: {
+          description,
+          price,
+          title,
+          duration,
+          warlockId: data.user.user.id,
+          categoryId,
+        },
+      });
 
-    res.send(JSON.stringify({ status: 200, error: null, data: result }));
+      res.send(JSON.stringify({ status: 200, error: null, data: result }));
+    }
   } catch (e) {
     res.status(500);
     res.send(JSON.stringify({ status: 500, error: e, data: null }));

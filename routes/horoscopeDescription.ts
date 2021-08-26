@@ -23,7 +23,7 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { title, description, image, horoscopeId, adminId } = req.body;
+  const { title, description, image, horoscopeId } = req.body;
 
   const data = await getUserId(req);
   if (
@@ -44,17 +44,18 @@ router.post("/", async (req, res) => {
   }
 
   try {
-    const result = await prisma.horoscopeDescription.create({
-      data: {
-        title,
-        description,
-        image,
-        horoscopeId,
-        adminId,
-      },
-    });
-
-    res.send(JSON.stringify({ status: 200, error: null, data: result.id }));
+    if (data.user) {
+      const result = await prisma.horoscopeDescription.create({
+        data: {
+          title,
+          description,
+          image,
+          horoscopeId,
+          adminId: data.user.user.id,
+        },
+      });
+      res.send(JSON.stringify({ status: 200, error: null, data: result.id }));
+    }
   } catch (error) {
     res.status(500);
     res.send(JSON.stringify({ status: 500, error: error, data: null }));

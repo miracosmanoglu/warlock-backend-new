@@ -31,7 +31,7 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { title, description, image, adminId } = req.body;
+  const { title, description, image } = req.body;
   const data = await getUserId(req);
 
   if (
@@ -51,15 +51,17 @@ router.post("/", async (req, res) => {
     return;
   }
   try {
-    const result = await prisma.blog.create({
-      data: {
-        title,
-        description,
-        image,
-        adminId,
-      },
-    });
-    res.send(JSON.stringify({ status: 200, error: null, data: result.id }));
+    if (data.user) {
+      const result = await prisma.blog.create({
+        data: {
+          title,
+          description,
+          image,
+          adminId: data.user?.user.id,
+        },
+      });
+      res.send(JSON.stringify({ status: 200, error: null, data: result.id }));
+    }
   } catch (error) {
     res.status(404);
     res.send(JSON.stringify({ status: 404, error: error, data: null }));

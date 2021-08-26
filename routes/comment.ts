@@ -23,7 +23,7 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { text, rate, gigId, customerId } = req.body;
+  const { text, rate, gigId } = req.body;
 
   const data = await getUserId(req);
 
@@ -39,16 +39,18 @@ router.post("/", async (req, res) => {
     return;
   }
   try {
-    const result = await prisma.comment.create({
-      data: {
-        text,
-        rate,
-        gigId,
-        customerId,
-      },
-    });
+    if (data.user) {
+      const result = await prisma.comment.create({
+        data: {
+          text,
+          rate,
+          gigId,
+          customerId: data.user.user.id,
+        },
+      });
 
-    res.send(JSON.stringify({ status: 200, error: null, data: result.id }));
+      res.send(JSON.stringify({ status: 200, error: null, data: result.id }));
+    }
   } catch (error) {
     res.status(500);
     res.send(JSON.stringify({ status: 500, error: error, data: null }));
