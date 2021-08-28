@@ -202,7 +202,9 @@ router.post("/login", async function login(req, res) {
         expiresIn: "2 days",
       }
     );
-    res.send(JSON.stringify({ status: 200, error: null, token: token }));
+    res.send(
+      JSON.stringify({ status: 200, error: null, token: token, data: warlock })
+    );
     return;
   } catch (error) {
     res.status(500);
