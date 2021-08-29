@@ -180,6 +180,7 @@ router.post("/login", async function login(req, res) {
         status: 200,
         error: null,
         token: token,
+        data: customer,
       })
     );
   } catch (error) {
