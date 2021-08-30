@@ -25,6 +25,7 @@ router.get("/all", async (req, res) => {
         tags: true,
         comments: true,
         status: true,
+        verified: true,
       },
     });
     res.send(JSON.stringify({ status: 200, error: null, data: warlocks }));
@@ -79,6 +80,7 @@ router.post("/register", async (req, res) => {
     tags,
     comments,
     status,
+    verified,
   } = req.body;
 
   try {
@@ -139,6 +141,7 @@ router.post("/register", async (req, res) => {
           tags,
           comments,
           status,
+          verified,
         },
       });
       res.send(JSON.stringify({ status: 200, error: null, data: warlock.id }));
@@ -436,4 +439,55 @@ router.put("/about", async (req, res) => {
   }
 });
 
+router.put("/verified", async (req, res) => {
+  const data = await getUserId(req);
+  const { id } = req.body;
+
+  if (
+    data === null ||
+    data.message ||
+    data?.user?.user.role === "WARLOCK" ||
+    data?.user?.user.role === "CUSTOMER"
+  ) {
+    res.status(401);
+    res.send(
+      JSON.stringify({
+        status: 401,
+        error: "JWT expired or not provided",
+        data: null,
+      })
+    );
+    return;
+  }
+  try {
+    const warlockExist = await prisma.warlock.findFirst({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!warlockExist) {
+      res.status(400);
+      res.send(
+        JSON.stringify({
+          status: 400,
+          error: "warlock does not exist",
+          data: null,
+        })
+      );
+      return;
+    }
+
+    const warlock = await prisma.warlock.update({
+      where: { id: id },
+      data: { verified: req.body.verified },
+    });
+    res.send(JSON.stringify({ status: 200, error: null, data: warlock.id }));
+    return;
+  } catch (error) {
+    res.status(404);
+    res.send(JSON.stringify({ status: 404, error: error, data: null }));
+    return;
+  }
+});
 module.exports = router;

@@ -47,6 +47,7 @@ model Warlock {
   updatedAt DateTime @updatedAt
   Gig       Gig[]
   role      Role     @default(WARLOCK)
+  verified  Boolean  @default(false)
 
 }
 

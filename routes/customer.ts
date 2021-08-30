@@ -118,6 +118,7 @@ router.post("/register", async (req, res) => {
         },
       });
       res.send(JSON.stringify({ status: 200, error: null, data: customer.id }));
+      return;
     } catch (e) {
       res.status(500);
       res.send(
@@ -127,10 +128,12 @@ router.post("/register", async (req, res) => {
           data: null,
         })
       );
+      return;
     }
   } catch (e) {
     res.status(500);
     res.send(JSON.stringify({ status: 500, error: e, data: null }));
+    return;
   }
 });
 
