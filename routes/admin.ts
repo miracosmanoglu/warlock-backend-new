@@ -43,8 +43,7 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/register", async (req, res) => {
-  const { email, username, name, surname, phone, password, about, image } =
-    req.body;
+  const { email, username, name, surname, phone, about, image } = req.body;
 
   try {
     const emailExist = await prisma.admin.findMany({
@@ -156,7 +155,9 @@ router.post("/login", async function login(req, res) {
       expiresIn: "2 days",
     }
   );
-  res.send(JSON.stringify({ status: 200, error: null, token: token }));
+  res.send(
+    JSON.stringify({ status: 200, error: null, token: token, data: admin })
+  );
 });
 
 router.put("/reset-password", async (req, res) => {
