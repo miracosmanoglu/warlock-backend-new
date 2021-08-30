@@ -44,12 +44,29 @@ router.post("/", async (req, res) => {
   const { description, price, title, duration, categoryId } = req.body;
 
   const data = await getUserId(req);
-  if (data === null || data.message || data?.user?.user.role === "CUSTOMER") {
+
+  if (
+    data === null ||
+    data.message ||
+    data?.user?.user.role === "CUSTOMER" ||
+    data?.user?.user.role === "ADMIN"
+  ) {
     res.status(401);
     res.send(
       JSON.stringify({
         status: 401,
         error: "JWT expired or not provided",
+        data: null,
+      })
+    );
+    return;
+  }
+  if (!data.user?.user.verified) {
+    res.status(401);
+    res.send(
+      JSON.stringify({
+        status: 401,
+        error: "Warlock is not verified",
         data: null,
       })
     );
@@ -92,6 +109,17 @@ router.put("/", async (req, res) => {
       JSON.stringify({
         status: 401,
         error: "JWT expired or not provided",
+        data: null,
+      })
+    );
+    return;
+  }
+  if (!data.user?.user.verified) {
+    res.status(401);
+    res.send(
+      JSON.stringify({
+        status: 401,
+        error: "Warlock is not verified",
         data: null,
       })
     );
@@ -144,12 +172,28 @@ router.delete(`/`, async (req, res) => {
 
   const data = await getUserId(req);
 
-  if (data === null || data.message || data?.user?.user.role === "CUSTOMER") {
+  if (
+    data === null ||
+    data.message ||
+    data?.user?.user.role === "CUSTOMER" ||
+    data?.user?.user.role === "ADMIN"
+  ) {
     res.status(401);
     res.send(
       JSON.stringify({
         status: 401,
         error: "JWT expired or not provided",
+        data: null,
+      })
+    );
+    return;
+  }
+  if (!data.user?.user.verified) {
+    res.status(401);
+    res.send(
+      JSON.stringify({
+        status: 401,
+        error: "Warlock is not verified",
         data: null,
       })
     );

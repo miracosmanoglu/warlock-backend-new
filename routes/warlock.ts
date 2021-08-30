@@ -198,7 +198,7 @@ router.post("/login", async function login(req, res) {
     // decode: no secret | use for client side
     const token = jwt.sign(
       {
-        user: lodash.pick(warlock[0], ["id", "email", "role"]),
+        user: lodash.pick(warlock[0], ["id", "email", "role", "verified"]),
       },
       SECRET,
       {

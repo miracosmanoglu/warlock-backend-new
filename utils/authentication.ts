@@ -3,7 +3,12 @@ const SECRET = "asbadbbdbbh7788888887hb113h3hbb";
 
 declare module "jsonwebtoken" {
   export interface UserIDJwtPayload extends jwt.JwtPayload {
-    user: { id: number; email: string; role: "WARLOCK" | "ADMIN" | "CUSTOMER" };
+    user: {
+      id: number;
+      email: string;
+      role: "WARLOCK" | "ADMIN" | "CUSTOMER";
+      verified: boolean;
+    };
   }
 }
 
