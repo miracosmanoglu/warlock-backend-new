@@ -4,8 +4,10 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import lodash from "lodash";
 import { getUserId } from "../utils/authentication";
-
+import crypto from "crypto";
 const SECRET = "asbadbbdbbh7788888887hb113h3hbb";
+import nodemailer from "nodemailer";
+
 const prisma = new PrismaClient();
 const router = express.Router();
 
@@ -490,4 +492,5 @@ router.put("/verified", async (req, res) => {
     return;
   }
 });
+
 module.exports = router;

@@ -137,3 +137,13 @@ model Horoscope {
   updatedAt            DateTime               @updatedAt
   HoroscopeDescription HoroscopeDescription[]
 }
+
+model ForgotTokens {
+  id         Int      @id @default(autoincrement())
+  email      String
+  token      String   @unique
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  expiration DateTime
+  used       Boolean  @default(false)
+}
