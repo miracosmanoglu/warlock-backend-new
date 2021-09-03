@@ -66,8 +66,6 @@ router.post("/forgot-password", async (req, res) => {
       data: { used: true },
     });
 
-    console.log(updatedTokens, "updated");
-
     // Create random reset token
     const fpSalt = crypto.randomBytes(64).toString("hex");
 
@@ -110,7 +108,7 @@ router.post("/forgot-password", async (req, res) => {
       }
     });
 
-    res.send(JSON.stringify({ status: 200, error: null, data: null }));
+    res.send(JSON.stringify({ status: 200, error: null, data: mailData }));
     return;
   } catch (error) {
     res.status(404);
