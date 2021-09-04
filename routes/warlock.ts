@@ -28,6 +28,7 @@ router.get("/all", async (req, res) => {
         comments: true,
         status: true,
         verified: true,
+        image: true,
       },
     });
     res.send(JSON.stringify({ status: 200, error: null, data: warlocks }));
