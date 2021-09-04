@@ -48,7 +48,7 @@ model Warlock {
   Gig       Gig[]
   role      Role     @default(WARLOCK)
   verified  Boolean  @default(false)
-
+  image     String   @db.LongText
 }
 
 model Admin {
