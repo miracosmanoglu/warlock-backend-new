@@ -4,10 +4,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import lodash from "lodash";
 import { getUserId } from "../utils/authentication";
-import crypto from "crypto";
 const SECRET = "asbadbbdbbh7788888887hb113h3hbb";
-import nodemailer from "nodemailer";
-
 const prisma = new PrismaClient();
 const router = express.Router();
 
@@ -538,7 +535,8 @@ router.put("/image", async (req, res) => {
       where: { id: data.user?.user.id },
       data: { image: req.body.image },
     });
-    res.send(JSON.stringify({ status: 200, error: null, data: warlock.id }));
+
+    res.send(JSON.stringify({ status: 200, error: null, data: null }));
     return;
   } catch (error) {
     res.status(404);
