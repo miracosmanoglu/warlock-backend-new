@@ -224,4 +224,56 @@ router.put("/reset-password", async (req, res) => {
   }
 });
 
+router.put("/image", async (req, res) => {
+  const data = await getUserId(req);
+
+  if (
+    data === null ||
+    data.message ||
+    data?.user?.user.role === "WARLOCK" ||
+    data?.user?.user.role === "CUSTOMER"
+  ) {
+    res.status(401);
+    res.send(
+      JSON.stringify({
+        status: 401,
+        error: "JWT expired or not provided",
+        data: null,
+      })
+    );
+    return;
+  }
+  try {
+    const adminExist = await prisma.admin.findFirst({
+      where: {
+        id: data.user?.user.id,
+      },
+    });
+
+    if (!adminExist) {
+      res.status(400);
+      res.send(
+        JSON.stringify({
+          status: 400,
+          error: "admin does not exist",
+          data: null,
+        })
+      );
+      return;
+    }
+
+    const admin = await prisma.admin.update({
+      where: { id: data.user?.user.id },
+      data: { image: req.body.image },
+    });
+
+    res.send(JSON.stringify({ status: 200, error: null, data: null }));
+    return;
+  } catch (error) {
+    res.status(404);
+    res.send(JSON.stringify({ status: 404, error: error, data: null }));
+    return;
+  }
+});
+
 module.exports = router;
