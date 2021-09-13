@@ -441,58 +441,6 @@ router.put("/about", async (req, res) => {
   }
 });
 
-router.put("/verified", async (req, res) => {
-  const data = await getUserId(req);
-  const { id } = req.body;
-
-  if (
-    data === null ||
-    data.message ||
-    data?.user?.user.role === "WARLOCK" ||
-    data?.user?.user.role === "CUSTOMER"
-  ) {
-    res.status(401);
-    res.send(
-      JSON.stringify({
-        status: 401,
-        error: "JWT expired or not provided",
-        data: null,
-      })
-    );
-    return;
-  }
-  try {
-    const warlockExist = await prisma.warlock.findFirst({
-      where: {
-        id: id,
-      },
-    });
-
-    if (!warlockExist) {
-      res.status(400);
-      res.send(
-        JSON.stringify({
-          status: 400,
-          error: "warlock does not exist",
-          data: null,
-        })
-      );
-      return;
-    }
-
-    const warlock = await prisma.warlock.update({
-      where: { id: id },
-      data: { verified: req.body.verified },
-    });
-    res.send(JSON.stringify({ status: 200, error: null, data: warlock.id }));
-    return;
-  } catch (error) {
-    res.status(404);
-    res.send(JSON.stringify({ status: 404, error: error, data: null }));
-    return;
-  }
-});
-
 router.put("/image", async (req, res) => {
   const data = await getUserId(req);
 
@@ -537,71 +485,6 @@ router.put("/image", async (req, res) => {
     });
 
     res.send(JSON.stringify({ status: 200, error: null, data: null }));
-    return;
-  } catch (error) {
-    res.status(404);
-    res.send(JSON.stringify({ status: 404, error: error, data: null }));
-    return;
-  }
-});
-
-router.delete("/", async (req, res) => {
-  const data = await getUserId(req);
-
-  if (
-    data === null ||
-    data.message ||
-    data?.user?.user.role === "WARLOCK" ||
-    data?.user?.user.role === "CUSTOMER"
-  ) {
-    res.status(401);
-    res.send(
-      JSON.stringify({
-        status: 401,
-        error: "JWT expired or not provided",
-        data: null,
-      })
-    );
-    return;
-  }
-  try {
-    const warlockExist = await prisma.warlock.findUnique({
-      where: {
-        id: req.body.id,
-      },
-    });
-
-    if (!warlockExist) {
-      res.status(400);
-      res.send(
-        JSON.stringify({
-          status: 400,
-          error: "warlock does not exist",
-          data: null,
-        })
-      );
-      return;
-    }
-
-    const deletedComments = await prisma.comment.deleteMany({
-      where: { gig: { warlockId: req.body.id } },
-    });
-
-    const deletedGigs = await prisma.gig.deleteMany({
-      where: { warlockId: req.body.id },
-    });
-
-    const warlock = await prisma.warlock.delete({
-      where: { id: req.body.id },
-    });
-
-    res.send(
-      JSON.stringify({
-        status: 200,
-        error: null,
-        data: { deletedComments, deletedGigs, warlock },
-      })
-    );
     return;
   } catch (error) {
     res.status(404);
