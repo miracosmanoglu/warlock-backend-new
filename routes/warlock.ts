@@ -4,6 +4,8 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import lodash from "lodash";
 import { getUserId } from "../utils/authentication";
+import nodemailer from "nodemailer";
+import smtpTransport from "nodemailer-smtp-transport";
 const SECRET = "asbadbbdbbh7788888887hb113h3hbb";
 const prisma = new PrismaClient();
 const router = express.Router();
@@ -493,4 +495,60 @@ router.put("/image", async (req, res) => {
   }
 });
 
+router.post("/career", async (req, res) => {
+  try {
+    const warlockExist = await prisma.warlock.findFirst({
+      where: {
+        email: req.body.email,
+      },
+    });
+
+    if (!warlockExist) {
+      res.status(400);
+      res.send(
+        JSON.stringify({
+          status: 400,
+          error: "warlock does not exist",
+          data: null,
+        })
+      );
+      return;
+    }
+
+    const transporter = nodemailer.createTransport(
+      smtpTransport({
+        service: "gmail",
+        host: "smtp.gmail.com",
+        auth: {
+          user: "furkanmailsender@gmail.com",
+          pass: "12323434f",
+        },
+      })
+    );
+
+    const mailData = {
+      from: "furkanmailsender@gmail.com", // sender address
+      to: "mrccc23@gmail.com", // list of receivers
+      subject: "Sending Email using Node.js",
+      text: `-${
+        (req.body.name, req.body.surname, req.body.email, req.body.text)
+      }`,
+    };
+    //send email
+    transporter.sendMail(mailData, function (err, info) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(info);
+      }
+    });
+
+    res.send(JSON.stringify({ status: 200, error: null, data: mailData }));
+    return;
+  } catch (error) {
+    res.status(404);
+    res.send(JSON.stringify({ status: 404, error: error, data: null }));
+    return;
+  }
+});
 module.exports = router;
