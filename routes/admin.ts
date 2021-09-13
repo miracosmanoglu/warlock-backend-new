@@ -276,8 +276,6 @@ router.put("/image", async (req, res) => {
   }
 });
 
-// only admin can be use
-
 router.put("/verified", async (req, res) => {
   const data = await getUserId(req);
   const { id } = req.body;
@@ -330,7 +328,7 @@ router.put("/verified", async (req, res) => {
   }
 });
 
-router.delete("/", async (req, res) => {
+router.post("/", async (req, res) => {
   const data = await getUserId(req);
 
   if (
