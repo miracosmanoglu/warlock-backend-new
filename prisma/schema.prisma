@@ -38,7 +38,7 @@ model Warlock {
   surname   String
   phone     Int      @unique
   password  String
-  about     String
+  about     String?
   rating    Int?
   tags      String?
   comments  String?
@@ -48,7 +48,7 @@ model Warlock {
   Gig       Gig[]
   role      Role     @default(WARLOCK)
   verified  Boolean  @default(false)
-  image     String   @db.LongText
+  image     String?  @db.LongText
 }
 
 model Admin {
