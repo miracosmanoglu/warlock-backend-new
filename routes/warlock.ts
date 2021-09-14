@@ -530,9 +530,7 @@ router.post("/career", async (req, res) => {
       from: "furkanmailsender@gmail.com", // sender address
       to: "mrccc23@gmail.com", // list of receivers
       subject: "Sending Email using Node.js",
-      text: `-${
-        (req.body.name, req.body.surname, req.body.email, req.body.text)
-      }`,
+      text: `${req.body.name} ${req.body.surname} ${req.body.email} ${req.body.text}`,
     };
     //send email
     transporter.sendMail(mailData, function (err, info) {
