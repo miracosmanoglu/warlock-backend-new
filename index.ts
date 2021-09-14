@@ -10,6 +10,7 @@ app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use(express.json());
 app.use(cors());
+
 // const options: cors.CorsOptions = {
 //   allowedHeaders: [
 //     "Origin",
@@ -39,7 +40,7 @@ app.use("/api/horoscope", require("./routes/horoscope"));
 app.use("/api/horoscopeDescription", require("./routes/horoscopeDescription"));
 app.use("/api/warlock", require("./routes/warlock"));
 app.use("/api/password", require("./routes/password"));
-// app.use("/api/odeme", require("./routes/odeme"));
+app.use("/api/odeme", require("./routes/odeme"));
 
 const server = app.listen(process.env.PORT || 3001, () =>
   console.log("🚀 Server ready at: http://localhost:3001")

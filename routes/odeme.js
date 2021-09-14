@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 var Iyzipay = require("iyzipay");
+const url = require("url");
 
 var iyzipay = new Iyzipay({
   apiKey: "sandbox-FLDXJ5dH10YcfjLaxsLLmUToA4MhyKrX",
@@ -17,7 +18,7 @@ router.post("/", function (req, res) {
 });
 
 router.post("/callback", function (req, res) {
-  console.log(req.body);
+  console.log(req.body.token);
   iyzipay.checkoutForm.retrieve(
     {
       locale: "tr",
@@ -25,9 +26,13 @@ router.post("/callback", function (req, res) {
       token: req.body.token,
     },
     function (err, result) {
-      console.log(err, result);
-      done();
+      console.log(err, result, "result");
     }
+  );
+  res.redirect(
+    url.format({
+      pathname: "https://falzamani.vercel.app/",
+    })
   );
 });
 
