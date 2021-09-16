@@ -130,7 +130,7 @@ router.put("/", async (req, res) => {
   }
 });
 
-router.delete(`/`, async (req, res) => {
+router.post(`/delete`, async (req, res) => {
   const { id } = req.body;
 
   const data = await getUserId(req);
