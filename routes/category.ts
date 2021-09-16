@@ -62,9 +62,7 @@ router.post("/", async (req, res) => {
     res.send(JSON.stringify({ status: 200, error: null, data: result.id }));
   } catch (error) {
     res.status(404);
-    res.send(
-      JSON.stringify({ status: 404, error: "Category not found", data: null })
-    );
+    res.send(JSON.stringify({ status: 404, error: error, data: null }));
   }
 });
 module.exports = router;
