@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -151,6 +151,10 @@ router.post("/register", async (req, res) => {
       res.send(JSON.stringify({ status: 200, error: null, data: warlock.id }));
       return;
     } catch (e) {
+      if (e instanceof Prisma.PrismaClientKnownRequestError) {
+        // The .code property can be accessed in a type-safe manner
+        console.log(e.code);
+      }
       res.status(500);
       res.send(
         JSON.stringify({
@@ -162,6 +166,10 @@ router.post("/register", async (req, res) => {
       return;
     }
   } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      // The .code property can be accessed in a type-safe manner
+      console.log(e.code);
+    }
     res.status(500);
     res.send(JSON.stringify({ status: 500, error: e, data: null }));
     return;
