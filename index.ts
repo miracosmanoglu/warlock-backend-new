@@ -9,7 +9,6 @@ const router = express.Router();
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 app.use(express.json());
-app.use(cors());
 
 // const options: cors.CorsOptions = {
 //   allowedHeaders: [
@@ -24,8 +23,13 @@ app.use(cors());
 //   origin: "http://localhost:3000",
 // };
 
+const options: cors.CorsOptions = {
+  optionsSuccessStatus: 200,
+  origin: "http://localhost:3000",
+  methods: "GET, PUT, POST",
+};
 //use cors middleware
-// app.use(cors(options));
+app.use(cors(options));
 
 //add your routes
 // app.options("*", cors(options));
