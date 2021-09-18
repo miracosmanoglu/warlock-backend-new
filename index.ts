@@ -25,11 +25,11 @@ app.use(express.json());
 
 const options: cors.CorsOptions = {
   optionsSuccessStatus: 200,
-  origin: "http://localhost:3000",
+  origin: "https://falzamani.vercel.app",
   methods: "GET, PUT, POST",
 };
 //use cors middleware
-app.use(cors());
+app.use(cors(options));
 
 //add your routes
 // app.options("*", cors(options));
