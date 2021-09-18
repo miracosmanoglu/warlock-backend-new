@@ -29,7 +29,7 @@ const options: cors.CorsOptions = {
   methods: "GET, PUT, POST",
 };
 //use cors middleware
-app.use(cors(options));
+app.use(cors());
 
 //add your routes
 // app.options("*", cors(options));
