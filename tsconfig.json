@@ -6,6 +6,5 @@
     "lib": ["esnext"],
     "esModuleInterop": true,
     "allowJs": true
-  },
-  "exclude": ["./router/odeme.js"]
+  }
 }

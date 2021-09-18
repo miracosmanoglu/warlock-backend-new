@@ -1,23 +1,27 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-var Iyzipay = require("iyzipay");
-const url = require("url");
+// @ts-ignore: Unreachable code error
+import Iyzipay from "iyzipay";
+import url from "url";
 
 var iyzipay = new Iyzipay({
   apiKey: "sandbox-FLDXJ5dH10YcfjLaxsLLmUToA4MhyKrX",
   secretKey: "sandbox-6n4zpnJctiAMAu5XGfSyV2xx7YjNZO6w",
   uri: "https://sandbox-api.iyzipay.com",
 });
-router.post("/", function (req, res) {
-  iyzipay.checkoutFormInitialize.create(req.body, function (err, result) {
-    if (err) {
-      return res.status(400).send(err);
+router.post("/", function (req: any, res: any) {
+  iyzipay.checkoutFormInitialize.create(
+    req.body,
+    function (err: any, result: any) {
+      if (err) {
+        return res.status(400).send(err);
+      }
+      res.send(result);
     }
-    res.send(result);
-  });
+  );
 });
 
-router.post("/callback", function (req, res) {
+router.post("/callback", function (req: any, res: any) {
   console.log(req.body);
   iyzipay.checkoutForm.retrieve(
     {
@@ -25,7 +29,7 @@ router.post("/callback", function (req, res) {
       conversationId: "123456789",
       token: req.body.token,
     },
-    function (err, result) {
+    function (err: any, result: any) {
       console.log(err, result, "result");
     }
   );
