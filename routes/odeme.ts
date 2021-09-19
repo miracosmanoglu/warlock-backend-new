@@ -21,7 +21,7 @@ router.post("/", function (req: any, res: any) {
   );
 });
 
-router.post("/callback", function (req: any, res: any) {
+router.post("/callback", function async(req: any, res: any) {
   console.log(req.body);
   iyzipay.checkoutForm.retrieve(
     {
@@ -31,12 +31,20 @@ router.post("/callback", function (req: any, res: any) {
     },
     function (err: any, result: any) {
       console.log(err, result, "result");
+      if (err) {
+        res.redirect(
+          url.format({
+            pathname: "https://falzamani.vercel.app/hata",
+          })
+        );
+      } else {
+        res.redirect(
+          url.format({
+            pathname: "https://falzamani.vercel.app/basarili",
+          })
+        );
+      }
     }
-  );
-  res.redirect(
-    url.format({
-      pathname: "https://falzamani.vercel.app/",
-    })
   );
 });
 
