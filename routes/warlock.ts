@@ -218,19 +218,16 @@ router.post("/login", async function login(req, res) {
       }
     );
     res.send(
-      JSON.stringify({ status: 200, error: null, token: token, data: warlock })
-    );
-    return;
-  } catch (error) {
-    res.status(500);
-    res.send(
       JSON.stringify({
-        status: 500,
-        error: error,
-        token: null,
+        status: 200,
+        error: null,
+        token: token,
+        data: warlock,
       })
     );
-    return;
+  } catch (error) {
+    res.status(500);
+    res.send(JSON.stringify({ status: 500, error: error, token: null }));
   }
 });
 
