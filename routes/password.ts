@@ -53,36 +53,12 @@ router.post("/forgot-password", async (req, res) => {
       where: { email: req.body.email },
     });
 
-    if (!isCustomer) {
+    if (!(isCustomer || isAdmin || isWarlock)) {
       res.status(400);
       res.send(
         JSON.stringify({
           status: 400,
-          error: "customer does not exist",
-          data: null,
-        })
-      );
-      return;
-    }
-
-    if (!isWarlock) {
-      res.status(400);
-      res.send(
-        JSON.stringify({
-          status: 400,
-          error: "warlock does not exist",
-          data: null,
-        })
-      );
-      return;
-    }
-
-    if (!isAdmin) {
-      res.status(400);
-      res.send(
-        JSON.stringify({
-          status: 400,
-          error: "admin does not exist",
+          error: "user does not exist",
           data: null,
         })
       );
