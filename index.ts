@@ -25,7 +25,7 @@ app.use(express.json());
 
 const options: cors.CorsOptions = {
   optionsSuccessStatus: 200,
-  origin: "https://falzamani.vercel.app",
+  origin: ["https://falzamani.vercel.app", "http://localhost:3000"],
   methods: "GET, PUT, POST",
 };
 //use cors middleware
