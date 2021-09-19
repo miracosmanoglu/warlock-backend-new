@@ -97,7 +97,9 @@ router.post("/forgot-password", async (req, res) => {
       from: "furkanmailsender@gmail.com", // sender address
       to: req.body.email, // list of receivers
       subject: "Sending Email using Node.js",
-      text: `${JSON.stringify(passwordToken.token)} - That was easy! `,
+      text: `Linki takip ederek yeni şifreni girebilirsin, https://falzamani.vercel.app/ChangePassword/${JSON.stringify(
+        passwordToken.token
+      )} `,
     };
     //send email
     transporter.sendMail(mailData, function (err, info) {
