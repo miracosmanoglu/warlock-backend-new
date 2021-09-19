@@ -43,18 +43,46 @@ router.get("/forgot-password", async (req, res) => {
 
 router.post("/forgot-password", async (req, res) => {
   try {
-    const warlockExist = await prisma.warlock.findFirst({
-      where: {
-        email: req.body.email,
-      },
+    const isCustomer = await prisma.customer.findUnique({
+      where: { email: req.body.email },
+    });
+    const isWarlock = await prisma.warlock.findUnique({
+      where: { email: req.body.email },
+    });
+    const isAdmin = await prisma.admin.findUnique({
+      where: { email: req.body.email },
     });
 
-    if (!warlockExist) {
+    if (!isCustomer) {
+      res.status(400);
+      res.send(
+        JSON.stringify({
+          status: 400,
+          error: "customer does not exist",
+          data: null,
+        })
+      );
+      return;
+    }
+
+    if (!isWarlock) {
       res.status(400);
       res.send(
         JSON.stringify({
           status: 400,
           error: "warlock does not exist",
+          data: null,
+        })
+      );
+      return;
+    }
+
+    if (!isAdmin) {
+      res.status(400);
+      res.send(
+        JSON.stringify({
+          status: 400,
+          error: "admin does not exist",
           data: null,
         })
       );
