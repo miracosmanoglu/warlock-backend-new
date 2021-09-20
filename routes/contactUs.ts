@@ -3,7 +3,7 @@ import nodemailer from "nodemailer";
 import smtpTransport from "nodemailer-smtp-transport";
 const router = express.Router();
 
-router.post("/career", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const transporter = nodemailer.createTransport(
       smtpTransport({
