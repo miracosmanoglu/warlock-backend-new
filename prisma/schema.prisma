@@ -28,6 +28,8 @@ model Customer {
   updatedAt DateTime  @updatedAt
   Comment   Comment[]
   role      Role      @default(CUSTOMER)
+  Date      Date[]
+  credit    Int       @default(0)
 }
 
 model Warlock {
@@ -49,6 +51,7 @@ model Warlock {
   role      Role     @default(WARLOCK)
   verified  Boolean  @default(false)
   image     String?  @db.LongText
+  Date      Date[]
 }
 
 model Admin {
@@ -82,6 +85,23 @@ model Gig {
   Comment     Comment[]
   categoryId  Int
   category    Category  @relation(fields: [categoryId], references: [id])
+  Date        Date[]
+}
+
+model Date {
+  id          Int      @id @default(autoincrement())
+  credit      Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  Warlock     Warlock  @relation(fields: [warlockId], references: [id])
+  warlockId   Int
+  Customer    Customer @relation(fields: [customerId], references: [id])
+  customerId  Int
+  Gig         Gig      @relation(fields: [gigId], references: [id])
+  gigId       Int
+  description String?
+  time        DateTime @default(now())
+  verified    Boolean  @default(false)
 }
 
 model Comment {

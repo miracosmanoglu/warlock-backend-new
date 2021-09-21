@@ -1,4 +1,6 @@
 import express from "express";
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 const router = express.Router();
 // @ts-ignore: Unreachable code error
 import Iyzipay from "iyzipay";
@@ -29,7 +31,7 @@ router.post("/callback", function async(req: any, res: any) {
       conversationId: "123456789",
       token: req.body.token,
     },
-    function (err: any, result: any) {
+    async function (err: any, result: any) {
       console.log(err, result, "result");
       if (err) {
         res.redirect(
@@ -38,9 +40,20 @@ router.post("/callback", function async(req: any, res: any) {
           })
         );
       } else {
-        res.redirect(
+        const customer = await prisma.customer.update({
+          where: { id: req.body.id },
+          data: { credit: { increment: result.itemTransactions.price * 10 } },
+        });
+        await res.redirect(
           url.format({
             pathname: "https://falzamani.vercel.app/basarili",
+          })
+        );
+        res.send(
+          JSON.stringify({
+            status: 200,
+            error: "Success",
+            data: result,
           })
         );
       }
