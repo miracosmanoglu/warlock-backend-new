@@ -4,42 +4,41 @@ import { getUserId } from "../utils/authentication";
 const prisma = new PrismaClient();
 const router = express.Router();
 
-router.get("/all", async (req, res) => {
-  try {
-    const dates = await prisma.dates.findMany({});
-    res.send(JSON.stringify({ status: 200, error: null, data: dates }));
-  } catch (e) {
-    res.status(500);
-    res.send(JSON.stringify({ status: 500, error: e, data: null }));
-  }
-});
-
-router.get("/:id", async (req, res) => {
-  const { id } = req.params;
+router.get("/:warlockid/:customerid/:dateid", async (req, res) => {
+  const { warlockid, customerid, dateid } = req.params;
 
   try {
-    const date = await prisma.dates.findUnique({
-      where: { id: parseInt(id) },
+    const filteredDates = await prisma.dates.findMany({
+      where: {
+        AND: [
+          {
+            customerId: customerid === "all" ? undefined : parseInt(customerid),
+          },
+          {
+            warlockId: warlockid === "all" ? undefined : parseInt(warlockid),
+          },
+          {
+            id: dateid === "all" ? undefined : parseInt(dateid),
+          },
+        ],
+      },
     });
-
-    if (!date) {
-      res.status(404);
-      res.send(
-        JSON.stringify({
-          status: 404,
-          error: "date not found",
-          data: null,
-        })
-      );
-      return;
-    }
-
-    res.send(JSON.stringify({ status: 200, error: null, data: date }));
-    return;
+    res.send(
+      JSON.stringify({
+        status: 200,
+        error: null,
+        data: filteredDates,
+      })
+    );
   } catch (error) {
     res.status(404);
-    res.send(JSON.stringify({ status: 404, error: error, data: null }));
-    return;
+    res.send(
+      JSON.stringify({
+        status: 404,
+        error: error,
+        data: null,
+      })
+    );
   }
 });
 
