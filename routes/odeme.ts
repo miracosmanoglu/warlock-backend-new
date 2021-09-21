@@ -23,7 +23,7 @@ router.post("/", function (req: any, res: any) {
   );
 });
 
-router.post("/callback", function async(req: any, res: any) {
+router.post("/callback/:customerId", function async(req: any, res: any) {
   console.log(req.body);
   iyzipay.checkoutForm.retrieve(
     {
@@ -39,17 +39,20 @@ router.post("/callback", function async(req: any, res: any) {
             pathname: "https://falzamani.vercel.app/hata",
           })
         );
+        return;
       } else {
         const customer = await prisma.customer.update({
-          where: { id: req.body.id },
-          data: { credit: { increment: result.itemTransactions.price * 10 } },
+          where: { id: parseInt(req.params.customerId) },
+          data: {
+            credit: { increment: result.itemTransactions[0].price * 10 },
+          },
         });
         await res.redirect(
           url.format({
             pathname: "https://falzamani.vercel.app/basarili",
           })
         );
-        res.send(
+        await res.send(
           JSON.stringify({
             status: 200,
             error: "Success",
