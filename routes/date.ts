@@ -115,7 +115,6 @@ router.post("/", async (req, res) => {
         customerId: req.body.customerId,
         credit: gig.price,
         description: req.body.description,
-        time: req.body.time,
       },
     });
     res.send(JSON.stringify({ status: 200, error: null, data: newDate.id }));
@@ -187,7 +186,7 @@ router.post("/verify", async (req, res) => {
       where: { id: dateExist.customerId },
       data: {
         credit: {
-          decrement: req.body.amount,
+          decrement: newDate.credit,
         },
       },
     });

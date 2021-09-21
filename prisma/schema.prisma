@@ -100,7 +100,6 @@ model Date {
   Gig         Gig      @relation(fields: [gigId], references: [id])
   gigId       Int
   description String?
-  time        DateTime @default(now())
   verified    Boolean  @default(false)
 }
 
