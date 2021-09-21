@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get("/all", async (req, res) => {
   try {
-    const dates = await prisma.date.findMany({});
+    const dates = await prisma.dates.findMany({});
     res.send(JSON.stringify({ status: 200, error: null, data: dates }));
   } catch (e) {
     res.status(500);
@@ -18,7 +18,7 @@ router.get("/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
-    const date = await prisma.date.findUnique({
+    const date = await prisma.dates.findUnique({
       where: { id: parseInt(id) },
     });
 
@@ -108,7 +108,7 @@ router.post("/", async (req, res) => {
   }
 
   try {
-    const newDate = await prisma.date.create({
+    const newDate = await prisma.dates.create({
       data: {
         gigId: req.body.gigId,
         warlockId: req.body.warlockId,
@@ -145,7 +145,7 @@ router.post("/verify", async (req, res) => {
     return;
   }
 
-  const dateExist = await prisma.date.findFirst({
+  const dateExist = await prisma.dates.findFirst({
     where: {
       id: req.body.id,
     },
@@ -176,7 +176,7 @@ router.post("/verify", async (req, res) => {
   }
 
   try {
-    const newDate = await prisma.date.update({
+    const newDate = await prisma.dates.update({
       where: { id: req.body.id },
       data: {
         verified: req.body.verified,

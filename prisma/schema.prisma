@@ -28,7 +28,7 @@ model Customer {
   updatedAt DateTime  @updatedAt
   Comment   Comment[]
   role      Role      @default(CUSTOMER)
-  Date      Date[]
+  Dates     Dates[]
   credit    Int       @default(0)
 }
 
@@ -51,7 +51,7 @@ model Warlock {
   role      Role     @default(WARLOCK)
   verified  Boolean  @default(false)
   image     String?  @db.LongText
-  Date      Date[]
+  Dates     Dates[]
 }
 
 model Admin {
@@ -85,10 +85,10 @@ model Gig {
   Comment     Comment[]
   categoryId  Int
   category    Category  @relation(fields: [categoryId], references: [id])
-  Date        Date[]
+  Dates       Dates[]
 }
 
-model Date {
+model Dates {
   id          Int      @id @default(autoincrement())
   credit      Int
   createdAt   DateTime @default(now())
