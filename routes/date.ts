@@ -22,6 +22,7 @@ router.get("/:warlockid/:customerid/:dateid", async (req, res) => {
           },
         ],
       },
+      include: { Gig: true, Warlock: true, Customer: true },
     });
     res.send(
       JSON.stringify({
