@@ -32,7 +32,8 @@ router.post("/", async (req, res) => {
     res.send(
       JSON.stringify({
         status: 401,
-        error: "JWT expired or not provided",
+        error:
+          "Kullanıcı bu işlem için uygun değil. Lütfen başka bir hesap ile giriş yapın.",
         data: null,
       })
     );
@@ -67,7 +68,8 @@ router.put("/", async (req, res) => {
     res.send(
       JSON.stringify({
         status: 401,
-        error: "JWT expired or not provided",
+        error:
+          "Kullanıcı bu işlem için uygun değil. Lütfen başka bir hesap ile giriş yapın.",
         data: null,
       })
     );
@@ -85,7 +87,7 @@ router.put("/", async (req, res) => {
       res.send(
         JSON.stringify({
           status: 400,
-          error: "comment does not exist",
+          error: "Yorum bulunamadı.",
           data: null,
         })
       );
@@ -96,7 +98,7 @@ router.put("/", async (req, res) => {
       res.send(
         JSON.stringify({
           status: 401,
-          error: "Customer does not own this comment.",
+          error: "Kullanıcıya ait yorum bulunamadı.",
           data: null,
         })
       );
@@ -124,7 +126,8 @@ router.post(`/delete`, async (req, res) => {
     res.send(
       JSON.stringify({
         status: 401,
-        error: "JWT expired or not provided",
+        error:
+          "Kullanıcı bu işlem için uygun değil. Lütfen başka bir hesap ile giriş yapın.",
         data: null,
       })
     );
@@ -142,7 +145,7 @@ router.post(`/delete`, async (req, res) => {
       res.send(
         JSON.stringify({
           status: 400,
-          error: "comment does not exist",
+          error: "Yorum bulunamadı.",
           data: null,
         })
       );
@@ -153,7 +156,7 @@ router.post(`/delete`, async (req, res) => {
       res.send(
         JSON.stringify({
           status: 401,
-          error: "Customer does not own this comment.",
+          error: "Kullanıcıya ait yorum bulunamadı.",
           data: null,
         })
       );

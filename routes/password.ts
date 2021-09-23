@@ -58,7 +58,7 @@ router.post("/forgot-password", async (req, res) => {
       res.send(
         JSON.stringify({
           status: 400,
-          error: "user does not exist",
+          error: "Kullanıcı bulunamadı.",
           data: null,
         })
       );
@@ -136,7 +136,7 @@ router.put("/forgot-password/:token", async (req, res) => {
       res.send(
         JSON.stringify({
           status: 400,
-          error: "token does not exist",
+          error: "Geçersiz token.",
           data: null,
         })
       );
@@ -148,7 +148,7 @@ router.put("/forgot-password/:token", async (req, res) => {
       res.send(
         JSON.stringify({
           status: 500,
-          error: "Password does not match.",
+          error: "Şifreler uyuşmuyor. Kontrol ediniz.",
           data: null,
         })
       );
@@ -194,7 +194,11 @@ router.put("/forgot-password/:token", async (req, res) => {
     });
 
     res.send(
-      JSON.stringify({ status: 200, error: null, data: "successfully changed" })
+      JSON.stringify({
+        status: 200,
+        error: null,
+        data: "Başarılı bir şekilde değiştirildi.",
+      })
     );
     return;
   } catch (error) {

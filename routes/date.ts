@@ -60,7 +60,8 @@ router.post("/", async (req, res) => {
     res.send(
       JSON.stringify({
         status: 401,
-        error: "JWT expired or not provided",
+        error:
+          "Kullanıcı bu işlem için uygun değil. Lütfen danışan hesabı ile giriş yapın.",
         data: null,
       })
     );
@@ -76,7 +77,7 @@ router.post("/", async (req, res) => {
     res.send(
       JSON.stringify({
         status: 404,
-        error: "gig not found",
+        error: "İstenilen ilan bulunamadı.",
         data: null,
       })
     );
@@ -92,7 +93,7 @@ router.post("/", async (req, res) => {
     res.send(
       JSON.stringify({
         status: 404,
-        error: "customer not found",
+        error: "İstenilen kullanıcı bulunamadı",
         data: null,
       })
     );
@@ -104,7 +105,7 @@ router.post("/", async (req, res) => {
     res.send(
       JSON.stringify({
         status: 404,
-        error: "customer credit is not enough for this gig",
+        error: "Danışan kredisi bu işlem için yeterli değil.",
         data: null,
       })
     );
@@ -142,7 +143,8 @@ router.post("/verify", async (req, res) => {
     res.send(
       JSON.stringify({
         status: 401,
-        error: "JWT expired or not provided",
+        error:
+          "Kullanıcı bu işlem için uygun değil. Lütfen başka bir hesap ile giriş yapın.",
         data: null,
       })
     );
@@ -160,7 +162,7 @@ router.post("/verify", async (req, res) => {
     res.send(
       JSON.stringify({
         status: 400,
-        error: "date does not exist",
+        error: "Randevu bulunamadı.",
         data: null,
       })
     );
@@ -172,7 +174,7 @@ router.post("/verify", async (req, res) => {
     res.send(
       JSON.stringify({
         status: 401,
-        error: "Warlock does not own this date.",
+        error: "Danışmanın böyle bir randevusu yok.",
         data: null,
       })
     );

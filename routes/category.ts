@@ -25,7 +25,7 @@ router.get("/:id", async (req, res) => {
   } catch (error) {
     res.status(404);
     res.send(
-      JSON.stringify({ status: 404, error: "Category not found", data: null })
+      JSON.stringify({ status: 404, error: "Kategori bulunamadı.", data: null })
     );
   }
 });
@@ -44,7 +44,8 @@ router.post("/", async (req, res) => {
     res.send(
       JSON.stringify({
         status: 401,
-        error: "JWT expired or not provided",
+        error:
+          "Kullanıcı bu işlem için uygun değil. Lütfen başka bir hesap ile giriş yapın.",
         data: null,
       })
     );

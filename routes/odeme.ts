@@ -55,7 +55,7 @@ router.post("/callback/:customerId", function async(req: any, res: any) {
         await res.send(
           JSON.stringify({
             status: 200,
-            error: "Success",
+            error: null,
             data: result,
           })
         );

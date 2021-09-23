@@ -55,7 +55,8 @@ router.post("/", async (req, res) => {
     res.send(
       JSON.stringify({
         status: 401,
-        error: "JWT expired or not provided",
+        error:
+          "Kullanıcı bu işlem için uygun değil. Lütfen başka bir hesap ile giriş yapın.",
         data: null,
       })
     );
@@ -66,7 +67,8 @@ router.post("/", async (req, res) => {
     res.send(
       JSON.stringify({
         status: 401,
-        error: "Warlock is not verified",
+        error:
+          "Danışman onaylı değil. Lütfen kariyer kısmından site ile iletişime geçiniz.",
         data: null,
       })
     );
@@ -108,7 +110,8 @@ router.put("/", async (req, res) => {
     res.send(
       JSON.stringify({
         status: 401,
-        error: "JWT expired or not provided",
+        error:
+          "Kullanıcı bu işlem için uygun değil. Lütfen başka bir hesap ile giriş yapın.",
         data: null,
       })
     );
@@ -119,7 +122,8 @@ router.put("/", async (req, res) => {
     res.send(
       JSON.stringify({
         status: 401,
-        error: "Warlock is not verified",
+        error:
+          "Danışman onaylı değil. Lütfen kariyer kısmından site ile iletişime geçiniz.",
         data: null,
       })
     );
@@ -137,7 +141,7 @@ router.put("/", async (req, res) => {
       res.send(
         JSON.stringify({
           status: 400,
-          error: "gig does not exist",
+          error: "İlan bulunamadı.",
           data: null,
         })
       );
@@ -149,7 +153,7 @@ router.put("/", async (req, res) => {
       res.send(
         JSON.stringify({
           status: 401,
-          error: "Warlock does not own this gig.",
+          error: "Danışmana ait ilan bulunamadı.",
           data: null,
         })
       );
@@ -182,7 +186,8 @@ router.post(`/delete`, async (req, res) => {
     res.send(
       JSON.stringify({
         status: 401,
-        error: "JWT expired or not provided",
+        error:
+          "Kullanıcı bu işlem için uygun değil. Lütfen başka bir hesap ile giriş yapın.",
         data: null,
       })
     );
@@ -193,7 +198,8 @@ router.post(`/delete`, async (req, res) => {
     res.send(
       JSON.stringify({
         status: 401,
-        error: "Warlock is not verified",
+        error:
+          "Danışman onaylı değil. Lütfen kariyer kısmından site ile iletişime geçiniz.",
         data: null,
       })
     );
@@ -211,7 +217,7 @@ router.post(`/delete`, async (req, res) => {
       res.send(
         JSON.stringify({
           status: 400,
-          error: "Gig does not exist",
+          error: "Gig bulunamadı.",
           data: null,
         })
       );

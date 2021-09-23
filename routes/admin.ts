@@ -26,7 +26,7 @@ router.get("/:id", async (req, res) => {
       res.send(
         JSON.stringify({
           status: 404,
-          error: "admin not found",
+          error: "Admin bulunamadı.",
           data: null,
         })
       );
@@ -54,7 +54,7 @@ router.post("/register", async (req, res) => {
       res.send(
         JSON.stringify({
           status: 302,
-          error: "admin is found with that email",
+          error: "Bu email ile kullanıcı mevcut.",
           data: null,
         })
       );
@@ -68,7 +68,7 @@ router.post("/register", async (req, res) => {
       res.send(
         JSON.stringify({
           status: 302,
-          error: "admin is found with that username",
+          error: "Bu kullanıcı adı ile kullanıcı mevcut.",
           data: null,
         })
       );
@@ -82,7 +82,7 @@ router.post("/register", async (req, res) => {
       res.send(
         JSON.stringify({
           status: 302,
-          error: "admin is found with that phone",
+          error: "Bu telefon ile kullanıcı mevcut.",
           data: null,
         })
       );
@@ -130,7 +130,7 @@ router.post("/login", async function login(req, res) {
     res.send(
       JSON.stringify({
         status: 404,
-        error: "Not admin with that email",
+        error: "Email'e sahip kullanıcı bulunamadı.",
         token: null,
       })
     );
@@ -140,7 +140,7 @@ router.post("/login", async function login(req, res) {
   if (!valid) {
     res.status(404);
     res.send(
-      JSON.stringify({ status: 404, error: "Incorrect password", token: null })
+      JSON.stringify({ status: 404, error: "Yanlış şifre.", token: null })
     );
     return;
   }
@@ -173,7 +173,8 @@ router.put("/reset-password", async (req, res) => {
     res.send(
       JSON.stringify({
         status: 401,
-        error: "JWT expired or not provided",
+        error:
+          "Kullanıcı bu işlem için uygun değil. Lütfen başka bir hesap ile giriş yapın.",
         data: null,
       })
     );
@@ -191,7 +192,7 @@ router.put("/reset-password", async (req, res) => {
       res.send(
         JSON.stringify({
           status: 400,
-          error: "admin does not exist",
+          error: "Admin bulunamadı.",
           data: null,
         })
       );
@@ -203,7 +204,7 @@ router.put("/reset-password", async (req, res) => {
       res.send(
         JSON.stringify({
           status: 500,
-          error: "Password does not match.",
+          error: "Şifreler uyuşmuyor. Kontrol ediniz.",
           data: null,
         })
       );
@@ -237,7 +238,8 @@ router.put("/image", async (req, res) => {
     res.send(
       JSON.stringify({
         status: 401,
-        error: "JWT expired or not provided",
+        error:
+          "Kullanıcı bu işlem için uygun değil. Lütfen başka bir hesap ile giriş yapın.",
         data: null,
       })
     );
@@ -255,7 +257,7 @@ router.put("/image", async (req, res) => {
       res.send(
         JSON.stringify({
           status: 400,
-          error: "admin does not exist",
+          error: "Admin bulunamadı.",
           data: null,
         })
       );
@@ -290,7 +292,8 @@ router.put("/verified", async (req, res) => {
     res.send(
       JSON.stringify({
         status: 401,
-        error: "JWT expired or not provided",
+        error:
+          "Kullanıcı bu işlem için uygun değil. Lütfen başka bir hesap ile giriş yapın.",
         data: null,
       })
     );
@@ -308,7 +311,7 @@ router.put("/verified", async (req, res) => {
       res.send(
         JSON.stringify({
           status: 400,
-          error: "warlock does not exist",
+          error: "Danışman bulunamadı.",
           data: null,
         })
       );
@@ -341,7 +344,8 @@ router.post("/", async (req, res) => {
     res.send(
       JSON.stringify({
         status: 401,
-        error: "JWT expired or not provided",
+        error:
+          "Kullanıcı bu işlem için uygun değil. Lütfen başka bir hesap ile giriş yapın.",
         data: null,
       })
     );
@@ -359,7 +363,7 @@ router.post("/", async (req, res) => {
       res.send(
         JSON.stringify({
           status: 400,
-          error: "warlock does not exist",
+          error: "Danışman bulunamadı.",
           data: null,
         })
       );

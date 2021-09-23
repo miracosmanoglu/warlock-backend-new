@@ -43,7 +43,7 @@ router.get("/:id", async (req, res) => {
       res.send(
         JSON.stringify({
           status: 404,
-          error: "customer not found",
+          error: "Danışan bulunamadı.",
           data: null,
         })
       );
@@ -71,7 +71,7 @@ router.post("/register", async (req, res) => {
       res.send(
         JSON.stringify({
           status: 302,
-          error: "Customer is found with that email",
+          error: "Bu email ile kullanıcı mevcut.",
           data: null,
         })
       );
@@ -85,7 +85,7 @@ router.post("/register", async (req, res) => {
       res.send(
         JSON.stringify({
           status: 302,
-          error: "Customer is found with that username",
+          error: "Bu kullanıcı adı ile kullanıcı mevcut.",
           data: null,
         })
       );
@@ -99,7 +99,7 @@ router.post("/register", async (req, res) => {
       res.send(
         JSON.stringify({
           status: 302,
-          error: "Customer is found with that phone",
+          error: "Bu telefon ile kullanıcı mevcut.",
           data: null,
         })
       );
@@ -149,7 +149,7 @@ router.post("/login", async function login(req, res) {
       res.send(
         JSON.stringify({
           status: 404,
-          error: "Not customer with that email",
+          error: "Email'e sahip kullanıcı bulunamadı.",
           token: null,
         })
       );
@@ -161,7 +161,7 @@ router.post("/login", async function login(req, res) {
       res.send(
         JSON.stringify({
           status: 404,
-          error: "Incorrect password",
+          error: "Yanlış şifre.",
           token: null,
         })
       );
@@ -205,7 +205,8 @@ router.put("/reset-password", async (req, res) => {
     res.send(
       JSON.stringify({
         status: 401,
-        error: "JWT expired or not provided",
+        error:
+          "Kullanıcı bu işlem için uygun değil. Lütfen başka bir hesap ile giriş yapın.",
         data: null,
       })
     );
@@ -223,7 +224,7 @@ router.put("/reset-password", async (req, res) => {
       res.send(
         JSON.stringify({
           status: 400,
-          error: "customer does not exist",
+          error: "Danışan bulunamadı.",
           data: null,
         })
       );
@@ -235,7 +236,7 @@ router.put("/reset-password", async (req, res) => {
       res.send(
         JSON.stringify({
           status: 500,
-          error: "Password does not match.",
+          error: "Şifreler uyuşmuyor. Kontrol ediniz.",
           data: null,
         })
       );

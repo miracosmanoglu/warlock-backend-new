@@ -28,7 +28,8 @@ router.post("/", async (req, res) => {
     res.send(
       JSON.stringify({
         status: 401,
-        error: "JWT expired or not provided",
+        error:
+          "Kullanıcı bu işlem için uygun değil. Lütfen başka bir hesap ile giriş yapın.",
         data: null,
       })
     );
@@ -44,7 +45,7 @@ router.post("/", async (req, res) => {
       res.send(
         JSON.stringify({
           status: 302,
-          error: "horoscope is found with that name",
+          error: "Bu isme sahip burç bulundu.",
         })
       );
       return;
@@ -96,7 +97,8 @@ router.put("/", async (req, res) => {
     res.send(
       JSON.stringify({
         status: 401,
-        error: "JWT expired or not provided",
+        error:
+          "Kullanıcı bu işlem için uygun değil. Lütfen başka bir hesap ile giriş yapın.",
         data: null,
       })
     );
@@ -114,7 +116,7 @@ router.put("/", async (req, res) => {
       res.send(
         JSON.stringify({
           status: 400,
-          error: "horoscope does not exist",
+          error: "Burç bulunamadı.",
           data: null,
         })
       );
@@ -145,7 +147,8 @@ router.post(`/delete`, async (req, res) => {
     res.send(
       JSON.stringify({
         status: 401,
-        error: "JWT expired or not provided",
+        error:
+          "Kullanıcı bu işlem için uygun değil. Lütfen başka bir hesap ile giriş yapın.",
         data: null,
       })
     );
@@ -163,7 +166,7 @@ router.post(`/delete`, async (req, res) => {
       res.send(
         JSON.stringify({
           status: 400,
-          error: "horoscope does not exist",
+          error: "Burç bulunamadı.",
           data: null,
         })
       );
