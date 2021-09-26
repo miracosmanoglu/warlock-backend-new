@@ -47,6 +47,7 @@ app.use("/api/password", require("./routes/password"));
 app.use("/api/contactUs", require("./routes/contactUs"));
 app.use("/api/odeme", require("./routes/odeme"));
 app.use("/api/date", require("./routes/date"));
+app.use("/api/search", require("./routes/search"));
 
 const server = app.listen(process.env.PORT || 3001, () =>
   console.log("🚀 Server ready at: http://localhost:3001")
