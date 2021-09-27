@@ -5,7 +5,7 @@ import { getUserId } from "../utils/authentication";
 const prisma = new PrismaClient();
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const filteredGigs = await prisma.gig.findMany({
       where: {
