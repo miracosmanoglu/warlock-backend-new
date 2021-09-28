@@ -138,7 +138,7 @@ model Blog {
 model HoroscopeDescription {
   id          Int       @id @default(autoincrement())
   title       String
-  description String
+  description String    @db.LongText
   image       String    @db.LongText
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
