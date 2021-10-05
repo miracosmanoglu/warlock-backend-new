@@ -60,7 +60,7 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/register", async (req, res) => {
-  const { email, username, name, surname, phone } = req.body;
+  const { email, username, name, surname, phone, identity } = req.body;
 
   try {
     const emailExist = await prisma.customer.findMany({
@@ -105,6 +105,20 @@ router.post("/register", async (req, res) => {
       );
       return;
     }
+    const identityExist = await prisma.customer.findMany({
+      where: { identity: identity },
+    });
+    if (usernameExist.length != 0) {
+      res.status(302);
+      res.send(
+        JSON.stringify({
+          status: 302,
+          error: "Bu kullanıcı adı ile kullanıcı mevcut.",
+          data: null,
+        })
+      );
+      return;
+    }
     req.body.password = await bcrypt.hash(req.body.password, 12);
     try {
       const customer = await prisma.customer.create({
@@ -114,6 +128,7 @@ router.post("/register", async (req, res) => {
           surname,
           phone,
           email,
+          identity,
           password: req.body.password,
         },
       });
