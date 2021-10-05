@@ -96,14 +96,15 @@ router.post("/forgot-password", async (req, res) => {
         },
       })
     );
-
     const mailData = {
       from: "furkanmailsender@gmail.com", // sender address
       to: req.body.email, // list of receivers
-      subject: "Sending Email using Node.js",
-      text: `Linki takip ederek yeni şifreni girebilirsin, https://falzamani.vercel.app/ChangePassword/${JSON.stringify(
+      subject: "Fal Zamanı Şifre Değiştirme İsteği",
+      text: `Merhaba ${
+        isAdmin?.username || isCustomer?.username || isWarlock?.username
+      }, linki takip ederek yeni şifreni girebilirsin, https://falzamani.vercel.app/ChangePassword/${
         passwordToken.token
-      )} `,
+      } `,
     };
     //send email
     transporter.sendMail(mailData, function (err, info) {

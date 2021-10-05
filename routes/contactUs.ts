@@ -18,8 +18,8 @@ router.post("/", async (req, res) => {
     const mailData = {
       from: "furkanmailsender@gmail.com", // sender address
       to: "mrccc23@gmail.com", // list of receivers
-      subject: "Sending Email using Node.js",
-      text: `${req.body.name} ${req.body.surname} ${req.body.email} ${req.body.text} ${req.body.phone}`,
+      subject: "Bize Ulaşın Formu",
+      html: `<p><b>Ad:</b> ${req.body.name}<br/><b>Soyad:</b> ${req.body.surname}<br/><b>Email:</b> ${req.body.email} <br/><b>Telefon:</b> ${req.body.phone}<br/><b>Açıklama:</b> ${req.body.text}</p>`,
     };
     //send email
     transporter.sendMail(mailData, function (err, info) {

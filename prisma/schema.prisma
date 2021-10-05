@@ -30,6 +30,7 @@ model Customer {
   role      Role      @default(CUSTOMER)
   Dates     Dates[]
   credit    Int       @default(0)
+  identity  String    @unique
 }
 
 model Warlock {
