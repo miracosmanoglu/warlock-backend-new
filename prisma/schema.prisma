@@ -41,7 +41,7 @@ model Warlock {
   surname   String
   phone     Int      @unique
   password  String
-  about     String?
+  about     String?  @db.LongText
   rating    Int?
   tags      String?
   comments  String?
@@ -63,7 +63,7 @@ model Admin {
   name                 String
   surname              String
   phone                Int                    @unique
-  about                String
+  about                String                 @db.LongText
   image                String                 @db.LongText
   createdAt            DateTime               @default(now())
   updatedAt            DateTime               @updatedAt
@@ -75,7 +75,7 @@ model Admin {
 
 model Gig {
   id          Int       @id @default(autoincrement())
-  description String
+  description String    @db.LongText
   price       Int
   title       String
   duration    String
@@ -106,7 +106,7 @@ model Dates {
 
 model Comment {
   id         Int      @id @default(autoincrement())
-  text       String
+  text       String   @db.LongText
   rate       Int
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
