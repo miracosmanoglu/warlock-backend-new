@@ -22,7 +22,7 @@ model Customer {
   username  String    @unique
   name      String
   surname   String
-  phone     Int       @unique
+  phone     BigInt    @unique
   password  String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -39,7 +39,7 @@ model Warlock {
   username  String   @unique
   name      String
   surname   String
-  phone     Int      @unique
+  phone     BigInt   @unique
   password  String
   about     String?  @db.LongText
   rating    Int?
@@ -62,7 +62,7 @@ model Admin {
   username             String                 @unique
   name                 String
   surname              String
-  phone                Int                    @unique
+  phone                BigInt                 @unique
   about                String                 @db.LongText
   image                String                 @db.LongText
   createdAt            DateTime               @default(now())
