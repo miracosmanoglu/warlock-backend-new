@@ -44,21 +44,28 @@ router.post("/callback/:customerId", function async(req: any, res: any) {
         const customer = await prisma.customer.update({
           where: { id: parseInt(req.params.customerId) },
           data: {
-            credit: { increment: result.itemTransactions[0].price * 10 },
+            credit: {
+              increment: parseInt(
+                result.itemTransactions[0].itemId.slice(0, -3)
+              ),
+            },
           },
         });
+
+        await res.status(200);
+
         await res.redirect(
           url.format({
             pathname: "https://falzamani.vercel.app/basarili",
           })
         );
-        await res.send(
-          JSON.stringify({
-            status: 200,
-            error: null,
-            data: result,
-          })
-        );
+        // await res.send(
+        //   JSON.stringify({
+        //     status: 200,
+        //     error: null,
+        //     data: result,
+        //   })
+        // );
       }
     }
   );
