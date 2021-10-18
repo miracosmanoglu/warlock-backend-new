@@ -25,7 +25,7 @@ app.use(express.json());
 
 const options: cors.CorsOptions = {
   optionsSuccessStatus: 200,
-  origin: ["http://falzamani-frontend.herokuapp.com", "http://localhost:3000"],
+  origin: ["https://falzamani-frontend.herokuapp.com", "http://localhost:3000"],
   methods: "GET, PUT, POST",
 };
 //use cors middleware
